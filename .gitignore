@@ -1,0 +1,10 @@
+# Build çıktıları
+bin/
+obj/
+
+# Rider/IDE ayarları
+.idea/
+*.user
+
+# Hassas config (şifre içeriyor)
+appsettings.Development.json

@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleCommerce.Domain", "SimpleCommerce.Domain\SimpleCommerce.Domain.csproj", "{4C159AA3-207C-42A8-AACC-3A4F00357511}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleCommerce.Application", "SimpleCommerce.Application\SimpleCommerce.Application.csproj", "{1BD60DEC-317A-4011-80E0-EB22AA5657DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleCommerce.Infrastructure", "SimpleCommerce.Infrastructure\SimpleCommerce.Infrastructure.csproj", "{70451306-EE5A-4EF5-BBEE-A81052446A0B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleCommerce.Api", "SimpleCommerce.Api\SimpleCommerce.Api.csproj", "{F78CBEAA-1D24-4980-8675-5F918A0CA7F7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4C159AA3-207C-42A8-AACC-3A4F00357511}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C159AA3-207C-42A8-AACC-3A4F00357511}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C159AA3-207C-42A8-AACC-3A4F00357511}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C159AA3-207C-42A8-AACC-3A4F00357511}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BD60DEC-317A-4011-80E0-EB22AA5657DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BD60DEC-317A-4011-80E0-EB22AA5657DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BD60DEC-317A-4011-80E0-EB22AA5657DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BD60DEC-317A-4011-80E0-EB22AA5657DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70451306-EE5A-4EF5-BBEE-A81052446A0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70451306-EE5A-4EF5-BBEE-A81052446A0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70451306-EE5A-4EF5-BBEE-A81052446A0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70451306-EE5A-4EF5-BBEE-A81052446A0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F78CBEAA-1D24-4980-8675-5F918A0CA7F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F78CBEAA-1D24-4980-8675-5F918A0CA7F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F78CBEAA-1D24-4980-8675-5F918A0CA7F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F78CBEAA-1D24-4980-8675-5F918A0CA7F7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
