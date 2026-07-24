@@ -1,6 +1,6 @@
 using System.Data;
 
-namespace SimpleCommerce.Infrastructure.Database;
+namespace SimpleCommerce.Application.Interfaces;
 
 public interface IConnectionFactory
 {

@@ -15,12 +15,18 @@ public class OrderItemRepository : IOrderItemRepository
         _connectionFactory = connectionFactory;
     }
 
-    public async Task CreateAsync(OrderItem orderItem)
+    public async Task CreateAsync(OrderItem orderItem, IDbTransaction? transaction = null)
     {
         const string sql = """
-                           INSERT INTO order_items (id, order_id, product_id, quantity, unit_price)
-                           VALUES (@Id, @OrderId, @ProductId, @Quantity, @UnitPrice)
+                           INSERT INTO order_items (id, order_id, variant_id, quantity, unit_price)
+                           VALUES (@Id, @OrderId, @VariantId, @Quantity, @UnitPrice)
                            """;
+
+        if (transaction is not null)
+        {
+            await transaction.Connection!.ExecuteAsync(sql, orderItem, transaction);
+            return;
+        }
 
         using IDbConnection connection = _connectionFactory.CreateConnection();
         await connection.ExecuteAsync(sql, orderItem);

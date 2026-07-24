@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SimpleCommerce.Application.Dtos;
 using SimpleCommerce.Application.Services;
@@ -6,13 +7,15 @@ namespace SimpleCommerce.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class OrdersController : ControllerBase
+public class OrdersController : ApiControllerBase
 {
     private readonly IShopService _shopService;
+    private readonly IOrderService _orderService;
 
-    public OrdersController(IShopService shopService)
+    public OrdersController(IShopService shopService, IOrderService orderService)
     {
         _shopService = shopService;
+        _orderService = orderService;
     }
 
     [HttpPost("purchase")]
@@ -35,5 +38,26 @@ public class OrdersController : ControllerBase
         {
             return BadRequest(new { message = ex.Message });
         }
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpGet]
+    public async Task<IActionResult> GetAllOrders()
+    {
+        var orders = await _orderService.GetAllOrderSummariesAsync();
+        return Ok(orders);
+    }
+
+    [Authorize(Roles = "Customer")]
+    [HttpGet("{customerId}")]
+    public async Task<IActionResult> GetCustomerOrders(string customerId)
+    {
+        if (GetAuthenticatedCustomerId() != customerId)
+        {
+            return Forbid();
+        }
+
+        var orders = await _orderService.GetOrderSummariesByCustomerIdAsync(customerId);
+        return Ok(orders);
     }
 }

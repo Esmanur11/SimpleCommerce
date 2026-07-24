@@ -1,6 +1,7 @@
 using System.Data;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
+using SimpleCommerce.Application.Interfaces;
 
 namespace SimpleCommerce.Infrastructure.Database;
 
