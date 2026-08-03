@@ -11,3 +11,6 @@ obj/
 
 # Hassas config (şifre içeriyor)
 appsettings.Development.json
+
+# Stitch AI tasarım referansları (frontend zaten bunlara göre yazıldı)
+ivoire*/
