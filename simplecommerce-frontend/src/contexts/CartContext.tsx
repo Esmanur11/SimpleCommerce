@@ -4,6 +4,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react"
@@ -27,18 +28,21 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const { auth } = useCustomerAuth()
   const [cart, setCart] = useState<CartView | null>(null)
   const [loading, setLoading] = useState(false)
+  const latestCustomerIdRef = useRef(auth?.customerId)
+  latestCustomerIdRef.current = auth?.customerId
 
   const refresh = useCallback(async () => {
-    if (!auth?.customerId) {
+    const customerId = auth?.customerId
+    if (!customerId) {
       setCart(null)
       return
     }
     setLoading(true)
     try {
-      const data = await getCart(auth.customerId)
-      setCart(data)
+      const data = await getCart(customerId)
+      if (latestCustomerIdRef.current === customerId) setCart(data)
     } finally {
-      setLoading(false)
+      if (latestCustomerIdRef.current === customerId) setLoading(false)
     }
   }, [auth?.customerId])
 

@@ -38,15 +38,24 @@ export function CheckoutPage() {
 
   useEffect(() => {
     if (!auth?.customerId) return
+    let cancelled = false
     Promise.all([getAddresses(auth.customerId), getShippingProviders()])
       .then(([addressData, providerData]) => {
+        if (cancelled) return
         setAddresses(addressData)
         setProviders(providerData)
         if (addressData.length > 0) setSelectedAddressId(addressData[0].id)
         if (providerData.length > 0) setSelectedProviderId(providerData[0].id)
       })
-      .catch((err) => setError(extractErrorMessage(err, "Bilgiler yüklenemedi.")))
-      .finally(() => setLoading(false))
+      .catch((err) => {
+        if (!cancelled) setError(extractErrorMessage(err, "Bilgiler yüklenemedi."))
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
   }, [auth?.customerId])
 
   const handleCreateAddress = async (values: Omit<CreateAddressRequest, "customerId">) => {

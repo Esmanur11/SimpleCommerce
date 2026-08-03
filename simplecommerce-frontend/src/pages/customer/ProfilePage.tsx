@@ -18,10 +18,20 @@ export function ProfilePage() {
 
   useEffect(() => {
     if (!auth?.customerId) return
+    let cancelled = false
     getAddresses(auth.customerId)
-      .then(setAddresses)
-      .catch((err) => setError(extractErrorMessage(err, "Adresler yüklenemedi.")))
-      .finally(() => setLoading(false))
+      .then((data) => {
+        if (!cancelled) setAddresses(data)
+      })
+      .catch((err) => {
+        if (!cancelled) setError(extractErrorMessage(err, "Adresler yüklenemedi."))
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
   }, [auth?.customerId])
 
   const handleLogout = () => {
