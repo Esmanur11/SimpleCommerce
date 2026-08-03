@@ -99,7 +99,7 @@ public class CartController : ApiControllerBase
 
         try
         {
-            var result = await _cartService.CheckoutAsync(customerId, request.AddressId, request.ShippingProviderId);
+            var result = await _cartService.CheckoutAsync(customerId, request.AddressId, request.ShippingProviderId, request.CouponCode);
             return Ok(result);
         }
         catch (KeyNotFoundException ex)

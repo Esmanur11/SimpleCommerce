@@ -7,4 +7,6 @@ public class CheckoutResultDto
     public string OrderStatus { get; set; } = string.Empty;
     public string PaymentStatus { get; set; } = string.Empty;
     public List<CartItemViewDto> Items { get; set; } = new();
+    public string? CouponCode { get; set; }
+    public decimal DiscountAmount { get; set; }
 }

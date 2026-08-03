@@ -22,12 +22,14 @@ public class OrderRepository : IOrderRepository
                                id, customer_id, total_price, status, created_at,
                                shipping_provider_id, shipping_price,
                                shipping_full_name, shipping_phone, shipping_city,
-                               shipping_district, shipping_address_line, shipping_zip_code)
+                               shipping_district, shipping_address_line, shipping_zip_code,
+                               coupon_code, discount_amount)
                            VALUES (
                                @Id, @CustomerId, @TotalPrice, @Status, @CreatedAt,
                                @ShippingProviderId, @ShippingPrice,
                                @ShippingFullName, @ShippingPhone, @ShippingCity,
-                               @ShippingDistrict, @ShippingAddressLine, @ShippingZipCode)
+                               @ShippingDistrict, @ShippingAddressLine, @ShippingZipCode,
+                               @CouponCode, @DiscountAmount)
                            """;
 
         if (transaction is not null)
@@ -46,7 +48,8 @@ public class OrderRepository : IOrderRepository
                            SELECT id, customer_id, total_price, status, created_at,
                                   shipping_provider_id, shipping_price,
                                   shipping_full_name, shipping_phone, shipping_city,
-                                  shipping_district, shipping_address_line, shipping_zip_code
+                                  shipping_district, shipping_address_line, shipping_zip_code,
+                                  coupon_code, discount_amount
                            FROM orders
                            WHERE id = @Id
                            """;
@@ -59,7 +62,8 @@ public class OrderRepository : IOrderRepository
     {
         const string sql = """
                            SELECT order_id, customer_id, customer_name, total_price, status, created_at,
-                                  shipping_provider_name, shipping_city, shipping_district
+                                  shipping_provider_name, shipping_city, shipping_district,
+                                  coupon_code, discount_amount
                            FROM v_order_summary
                            ORDER BY created_at DESC, order_id DESC
                            LIMIT @PageSize OFFSET @Offset
@@ -73,7 +77,8 @@ public class OrderRepository : IOrderRepository
     {
         const string sql = """
                            SELECT order_id, customer_id, customer_name, total_price, status, created_at,
-                                  shipping_provider_name, shipping_city, shipping_district
+                                  shipping_provider_name, shipping_city, shipping_district,
+                                  coupon_code, discount_amount
                            FROM v_order_summary
                            WHERE customer_id = @CustomerId
                            ORDER BY created_at DESC, order_id DESC

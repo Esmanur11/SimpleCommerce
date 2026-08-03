@@ -6,6 +6,7 @@ import { useCustomerAuth } from "../../contexts/CustomerAuthContext"
 import { getAddresses, createAddress } from "../../api/addresses"
 import { getShippingProviders } from "../../api/shippingProviders"
 import { checkoutCart } from "../../api/cart"
+import { validateCoupon } from "../../api/coupons"
 import { AddressForm } from "../../components/checkout/AddressForm"
 import { Button } from "../../components/ui/Button"
 import { Spinner } from "../../components/ui/Spinner"
@@ -35,6 +36,11 @@ export function CheckoutPage() {
   const [savingAddress, setSavingAddress] = useState(false)
   const [placingOrder, setPlacingOrder] = useState(false)
   const [result, setResult] = useState<CheckoutResult | null>(null)
+
+  const [couponCodeInput, setCouponCodeInput] = useState("")
+  const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discountAmount: number } | null>(null)
+  const [couponError, setCouponError] = useState<string | null>(null)
+  const [applyingCoupon, setApplyingCoupon] = useState(false)
 
   useEffect(() => {
     if (!auth?.customerId) return
@@ -77,7 +83,31 @@ export function CheckoutPage() {
   const selectedProvider = providers.find((p) => p.id === selectedProviderId)
   const shippingPrice = selectedProvider?.price ?? 0
   const subtotal = cart?.totalPrice ?? 0
-  const total = subtotal + shippingPrice
+  const discountAmount = appliedCoupon?.discountAmount ?? 0
+  const total = Math.max(0, subtotal - discountAmount + shippingPrice)
+
+  const handleApplyCoupon = async () => {
+    const code = couponCodeInput.trim()
+    if (!code) return
+    setApplyingCoupon(true)
+    setCouponError(null)
+    try {
+      const res = await validateCoupon({ code, cartTotal: subtotal })
+      setAppliedCoupon({ code: res.code, discountAmount: res.discountAmount })
+      toast.success("Kupon uygulandı")
+    } catch (err) {
+      setAppliedCoupon(null)
+      setCouponError(extractErrorMessage(err, "Kupon geçersiz."))
+    } finally {
+      setApplyingCoupon(false)
+    }
+  }
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null)
+    setCouponCodeInput("")
+    setCouponError(null)
+  }
 
   const handlePlaceOrder = async () => {
     if (!auth?.customerId || !selectedAddressId || !selectedProviderId) return
@@ -86,6 +116,7 @@ export function CheckoutPage() {
       const res = await checkoutCart(auth.customerId, {
         addressId: selectedAddressId,
         shippingProviderId: selectedProviderId,
+        couponCode: appliedCoupon?.code,
       })
       setResult(res)
       await refresh()
@@ -377,26 +408,53 @@ export function CheckoutPage() {
                     : "Seçilmedi"}
                 </span>
               </div>
+              {appliedCoupon && (
+                <div className="flex justify-between text-primary">
+                  <span className="font-body-md">İndirim ({appliedCoupon.code})</span>
+                  <span className="font-body-md">-{formatCurrency(discountAmount)}</span>
+                </div>
+              )}
               <div className="mt-2 flex items-end justify-between pt-4">
                 <span className="font-label-sm text-label-sm uppercase">Toplam</span>
                 <span className="font-headline-lg text-2xl">{formatCurrency(total)}</span>
               </div>
             </div>
             <div className="mt-8">
-              <div className="flex gap-2">
-                <input
-                  className="flex-grow border-0 border-b border-outline-variant bg-transparent px-0 py-2 font-body-md text-sm focus:border-primary focus:ring-0"
-                  placeholder="İndirim Kodu"
-                  type="text"
-                />
-                <button
-                  type="button"
-                  onClick={() => toast("Bu özellik yakında aktif olacak")}
-                  className="border border-outline-variant px-4 font-label-sm text-[10px] uppercase tracking-tighter transition-colors hover:bg-surface-container-high"
-                >
-                  Uygula
-                </button>
-              </div>
+              {appliedCoupon ? (
+                <div className="flex items-center justify-between border border-primary px-4 py-3">
+                  <span className="font-label-sm text-label-sm uppercase text-primary">
+                    {appliedCoupon.code} uygulandı
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleRemoveCoupon}
+                    className="font-label-sm text-[10px] uppercase tracking-tighter text-on-surface-variant hover:text-error"
+                  >
+                    Kaldır
+                  </button>
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <input
+                    className="flex-grow border-0 border-b border-outline-variant bg-transparent px-0 py-2 font-body-md text-sm focus:border-primary focus:ring-0"
+                    placeholder="İndirim Kodu"
+                    type="text"
+                    value={couponCodeInput}
+                    onChange={(e) => setCouponCodeInput(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    onClick={handleApplyCoupon}
+                    disabled={applyingCoupon || !couponCodeInput.trim()}
+                    className="border border-outline-variant px-4 font-label-sm text-[10px] uppercase tracking-tighter transition-colors hover:bg-surface-container-high disabled:opacity-50"
+                  >
+                    {applyingCoupon ? "Kontrol Ediliyor..." : "Uygula"}
+                  </button>
+                </div>
+              )}
+              {couponError && (
+                <p className="mt-2 font-label-sm text-[10px] text-error">{couponError}</p>
+              )}
             </div>
           </div>
           <div className="flex flex-col gap-4 px-2">

@@ -19,6 +19,7 @@ public class CartService : ICartService
     private readonly IPaymentRepository _paymentRepository;
     private readonly IAddressRepository _addressRepository;
     private readonly IShippingProviderRepository _shippingProviderRepository;
+    private readonly ICouponService _couponService;
     private readonly IConnectionFactory _connectionFactory;
 
     public CartService(
@@ -33,6 +34,7 @@ public class CartService : ICartService
         IPaymentRepository paymentRepository,
         IAddressRepository addressRepository,
         IShippingProviderRepository shippingProviderRepository,
+        ICouponService couponService,
         IConnectionFactory connectionFactory)
     {
         _cartRepository = cartRepository;
@@ -46,6 +48,7 @@ public class CartService : ICartService
         _paymentRepository = paymentRepository;
         _addressRepository = addressRepository;
         _shippingProviderRepository = shippingProviderRepository;
+        _couponService = couponService;
         _connectionFactory = connectionFactory;
     }
 
@@ -127,7 +130,7 @@ public class CartService : ICartService
         return cart?.CustomerId;
     }
 
-    public async Task<CheckoutResultDto> CheckoutAsync(string customerId, string addressId, string shippingProviderId)
+    public async Task<CheckoutResultDto> CheckoutAsync(string customerId, string addressId, string shippingProviderId, string? couponCode)
     {
         var customerTask = _customerRepository.GetByIdAsync(customerId);
         var addressTask = _addressRepository.GetByIdAsync(addressId);
@@ -210,7 +213,17 @@ public class CartService : ICartService
         }
 
         var itemsTotal = cartItems.Sum(ci => priceMap[ci.Id] * ci.Quantity);
-        var totalPrice = itemsTotal + shippingProvider.Price;
+
+        string? appliedCouponCode = null;
+        var discountAmount = 0m;
+        if (!string.IsNullOrWhiteSpace(couponCode))
+        {
+            var validation = await _couponService.ValidateAsync(couponCode, itemsTotal);
+            appliedCouponCode = validation.Code;
+            discountAmount = validation.DiscountAmount;
+        }
+
+        var totalPrice = Math.Max(0, itemsTotal + shippingProvider.Price - discountAmount);
         var now = DateTime.UtcNow;
 
         var order = new Order
@@ -227,7 +240,9 @@ public class CartService : ICartService
             ShippingCity = address.City,
             ShippingDistrict = address.District,
             ShippingAddressLine = address.AddressLine,
-            ShippingZipCode = address.ZipCode
+            ShippingZipCode = address.ZipCode,
+            CouponCode = appliedCouponCode,
+            DiscountAmount = discountAmount
         };
         var resultItems = new List<CartItemViewDto>();
 
@@ -307,7 +322,9 @@ public class CartService : ICartService
             TotalPrice = totalPrice,
             OrderStatus = order.Status,
             PaymentStatus = payment.PaymentStatus,
-            Items = resultItems
+            Items = resultItems,
+            CouponCode = appliedCouponCode,
+            DiscountAmount = discountAmount
         };
     }
 

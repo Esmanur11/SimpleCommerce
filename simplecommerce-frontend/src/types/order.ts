@@ -7,4 +7,6 @@ export interface OrderSummary {
   shippingProviderName: string
   shippingCity: string
   shippingDistrict: string
+  couponCode?: string | null
+  discountAmount: number
 }

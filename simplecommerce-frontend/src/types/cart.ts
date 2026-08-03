@@ -28,6 +28,7 @@ export interface UpdateCartItemRequest {
 export interface CheckoutRequest {
   addressId: string
   shippingProviderId: string
+  couponCode?: string | null
 }
 
 export interface CheckoutResult {
@@ -36,4 +37,6 @@ export interface CheckoutResult {
   orderStatus: string
   paymentStatus: string
   items: CartItemView[]
+  couponCode?: string | null
+  discountAmount: number
 }

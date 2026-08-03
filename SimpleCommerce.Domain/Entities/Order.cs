@@ -15,4 +15,6 @@ public class Order
     public string ShippingDistrict { get; set; } = string.Empty;
     public string ShippingAddressLine { get; set; } = string.Empty;
     public string? ShippingZipCode { get; set; }
+    public string? CouponCode { get; set; }
+    public decimal DiscountAmount { get; set; }
 }

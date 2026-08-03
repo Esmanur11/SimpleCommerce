@@ -51,6 +51,8 @@ builder.Services.AddScoped<IPriceRepository, PriceRepository>();
 builder.Services.AddScoped<IShippingProviderRepository, ShippingProviderRepository>();
 builder.Services.AddScoped<IShippingProviderService, ShippingProviderService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<ICouponRepository, CouponRepository>();
+builder.Services.AddScoped<ICouponService, CouponService>();
 
 var jwtKey = builder.Configuration["Jwt:Key"]!;
 var jwtIssuer = builder.Configuration["Jwt:Issuer"]!;

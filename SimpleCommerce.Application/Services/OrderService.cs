@@ -36,7 +36,9 @@ public class OrderService : IOrderService
             CreatedAt = s.CreatedAt,
             ShippingProviderName = s.ShippingProviderName,
             ShippingCity = s.ShippingCity,
-            ShippingDistrict = s.ShippingDistrict
+            ShippingDistrict = s.ShippingDistrict,
+            CouponCode = s.CouponCode,
+            DiscountAmount = s.DiscountAmount
         };
     }
 }

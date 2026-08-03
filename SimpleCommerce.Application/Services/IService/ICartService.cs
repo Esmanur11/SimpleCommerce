@@ -8,6 +8,6 @@ public interface ICartService
     Task AddItemAsync(AddToCartRequestDto request);
     Task UpdateItemQuantityAsync(string cartItemId, int newQuantity);
     Task RemoveItemAsync(string cartItemId);
-    Task<CheckoutResultDto> CheckoutAsync(string customerId, string addressId, string shippingProviderId);
+    Task<CheckoutResultDto> CheckoutAsync(string customerId, string addressId, string shippingProviderId, string? couponCode);
     Task<string?> GetItemOwnerCustomerIdAsync(string cartItemId);
 }

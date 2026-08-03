@@ -10,4 +10,6 @@ public class OrderSummaryDto
     public string ShippingProviderName { get; set; } = string.Empty;
     public string ShippingCity { get; set; } = string.Empty;
     public string ShippingDistrict { get; set; } = string.Empty;
+    public string? CouponCode { get; set; }
+    public decimal DiscountAmount { get; set; }
 }

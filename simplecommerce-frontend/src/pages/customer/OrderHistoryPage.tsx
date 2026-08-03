@@ -130,6 +130,16 @@ export function OrderHistoryPage() {
                         </span>
                         <span className="font-body-md text-body-md">{order.shippingDistrict}</span>
                       </div>
+                      {order.couponCode && (
+                        <div>
+                          <span className="mb-1 block font-label-sm text-label-sm uppercase text-on-surface-variant">
+                            Uygulanan Kupon
+                          </span>
+                          <span className="font-body-md text-body-md text-primary">
+                            {order.couponCode} (-{formatCurrency(order.discountAmount)})
+                          </span>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
