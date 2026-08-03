@@ -1,5 +1,6 @@
 import { z } from "zod"
 import { getDistrictsForProvince, turkeyProvinceNames } from "../data/turkeyProvinces"
+import { turkeyProvinceCodes } from "../data/turkeyProvinceCodes"
 
 const phoneRegex = /^0?\d{10}$/
 const zipCodeRegex = /^\d{5}$/
@@ -39,6 +40,15 @@ export const addressSchema = z
         code: "custom",
         message: "Seçilen ilçe, seçilen şehre ait değil",
         path: ["district"],
+      })
+    }
+
+    const provinceCode = turkeyProvinceCodes[data.city]
+    if (data.zipCode && provinceCode && !data.zipCode.startsWith(provinceCode)) {
+      ctx.addIssue({
+        code: "custom",
+        message: `Posta kodu seçilen il ile uyuşmuyor (${data.city} için ${provinceCode}xxx)`,
+        path: ["zipCode"],
       })
     }
   })

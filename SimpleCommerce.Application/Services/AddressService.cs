@@ -156,6 +156,13 @@ public class AddressService : IAddressService
             throw new ArgumentException("Posta kodu 5 haneli olmalıdır.");
         }
 
+        if (!string.IsNullOrEmpty(zipCode)
+            && TurkeyProvinceCodes.ByProvince.TryGetValue(city, out var provinceCode)
+            && !zipCode.StartsWith(provinceCode, StringComparison.Ordinal))
+        {
+            throw new ArgumentException($"Posta kodu seçilen il ile uyuşmuyor ({city} için {provinceCode}xxx).");
+        }
+
         return (title, fullName, phone, city, district, addressLine, string.IsNullOrEmpty(zipCode) ? null : zipCode);
     }
 
