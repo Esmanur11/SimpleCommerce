@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>IVOIRE | Siparişlerim & Giriş</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400&family=Hanken+Grotesk:wght@300;400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@100..900&family=Hanken+Grotesk:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body {
+            background-color: #F7F1E8; /* Brand Background */
+            -webkit-font-smoothing: antialiased;
+        }
+        .page-transition {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#93000a",
+                        "on-error": "#ffffff",
+                        "tertiary": "#635b4d",
+                        "inverse-on-surface": "#f6f0e7",
+                        "secondary": "#705a4f",
+                        "on-secondary-container": "#766055",
+                        "surface-variant": "#e7e2d9",
+                        "surface-tint": "#7f5538",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#4d4639",
+                        "surface-bright": "#fff9ef",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed": "#ffdbc7",
+                        "inverse-primary": "#f3bb98",
+                        "on-tertiary-container": "#fffbff",
+                        "on-tertiary-fixed": "#201b10",
+                        "tertiary-fixed": "#ece1cf",
+                        "on-secondary-fixed": "#281810",
+                        "error-container": "#ffdad6",
+                        "surface-container-low": "#f9f3ea",
+                        "on-secondary-fixed-variant": "#574239",
+                        "surface-dim": "#dfd9d1",
+                        "outline": "#83746c",
+                        "primary-container": "#986a4c",
+                        "background": "#fff9ef",
+                        "surface-container-high": "#ede7df",
+                        "on-background": "#1d1b16",
+                        "surface-container-highest": "#e7e2d9",
+                        "outline-variant": "#d5c3b9",
+                        "secondary-fixed": "#fbdccf",
+                        "tertiary-fixed-dim": "#d0c5b4",
+                        "inverse-surface": "#32302a",
+                        "primary-fixed-dim": "#f3bb98",
+                        "secondary-fixed-dim": "#ddc1b3",
+                        "on-surface": "#1d1b16",
+                        "on-primary-container": "#fffbff",
+                        "surface-container": "#f3ede4",
+                        "error": "#ba1a1a",
+                        "on-surface-variant": "#51443d",
+                        "primary": "#7c5236",
+                        "surface": "#fff9ef",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#7c7465",
+                        "on-primary-fixed-variant": "#643e23",
+                        "on-primary-fixed": "#311401",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#fbdccf"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-desktop": "64px",
+                        "stack-sm": "8px",
+                        "section-gap": "120px",
+                        "stack-lg": "32px",
+                        "margin-mobile": "20px",
+                        "stack-md": "16px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "title-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Bodoni Moda"],
+                        "label-sm": ["Hanken Grotesk"],
+                        "display-lg": ["Bodoni Moda"],
+                        "body-md": ["Hanken Grotesk"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "headline-lg-mobile": ["Bodoni Moda"],
+                        "headline-xl": ["Bodoni Moda"]
+                    },
+                    "fontSize": {
+                        "title-md": ["20px", { "lineHeight": "1.4", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "fontWeight": "300" }],
+                        "label-sm": ["12px", { "lineHeight": "1.2", "letterSpacing": "0.15em", "fontWeight": "600" }],
+                        "display-lg": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "300" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "1.2", "fontWeight": "300" }],
+                        "headline-xl": ["48px", { "lineHeight": "1.2", "fontWeight": "300" }]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-surface dark:bg-surface border-b border-outline-variant/30">
+<nav class="flex justify-between items-center h-20 px-margin-desktop w-full max-w-full mx-auto">
+<!-- Brand Logo -->
+<div class="flex-1">
+<a class="text-headline-xl font-headline-xl tracking-[0.3em] text-on-surface dark:text-on-surface uppercase" href="#">IVOIRE</a>
+</div>
+<!-- Navigation Links -->
+<div class="hidden md:flex items-center gap-stack-lg">
+<a class="text-on-surface-variant font-body-md hover:text-primary transition-colors duration-300" href="#">Women</a>
+<a class="text-on-surface-variant font-body-md hover:text-primary transition-colors duration-300" href="#">Men</a>
+<a class="text-on-surface-variant font-body-md hover:text-primary transition-colors duration-300" href="#">Accessories</a>
+</div>
+<!-- Trailing Icons -->
+<div class="flex-1 flex justify-end items-center gap-stack-md">
+<button class="hover:text-primary transition-all duration-300 ease-in-out">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<button class="hover:text-primary transition-all duration-300 ease-in-out">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+</button>
+<button class="hover:text-primary transition-all duration-300 ease-in-out">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+</button>
+<!-- Active Account Icon -->
+<button class="text-primary font-bold border-b border-primary pb-1 transition-all duration-300 ease-in-out">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</button>
+</div>
+</nav>
+</header>
+<main class="pt-32 pb-section-gap px-margin-mobile md:px-margin-desktop max-w-screen-xl mx-auto space-y-section-gap page-transition">
+<!-- SECTION: TAB SWITCHER (INTERACTIVE) -->
+<section class="flex flex-col md:flex-row items-baseline justify-between gap-stack-md">
+<div>
+<h1 class="font-headline-xl text-headline-xl text-on-surface">Müşteri Paneli</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2 max-w-md">Siparişlerinizi yönetin ve hesap ayarlarınızı IVOIRE butik deneyimiyle güncelleyin.</p>
+</div>
+<div class="flex gap-stack-md border-b border-outline-variant w-full md:w-auto">
+<button class="pb-stack-sm border-b-2 border-primary text-primary font-title-md transition-all duration-300" id="tab-orders" onclick="switchView('orders')">Siparişlerim</button>
+<button class="pb-stack-sm border-b-2 border-transparent text-on-surface-variant hover:text-on-surface font-title-md transition-all duration-300" id="tab-login" onclick="switchView('login')">Giriş / Kayıt</button>
+</div>
+</section>
+<!-- VIEW 1: ORDER HISTORY -->
+<div class="space-y-stack-lg" id="view-orders">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Son Siparişler</h2>
+<span class="font-label-sm text-label-sm uppercase text-secondary">3 Kayıt Bulundu</span>
+</div>
+<!-- Order Cards List -->
+<div class="flex flex-col gap-stack-md">
+<!-- Order Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant p-stack-md md:p-stack-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-stack-md group hover:border-primary transition-colors duration-500">
+<div class="flex flex-col gap-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">14 Mart 2024</span>
+<div class="flex items-center gap-2">
+<h3 class="font-title-md text-title-md text-on-surface">#IV-98421</h3>
+<span class="px-2 py-0.5 bg-surface-container-highest text-secondary font-label-sm text-[10px] uppercase tracking-wider">Teslim Edildi</span>
+</div>
+</div>
+<div class="flex -space-x-4 overflow-hidden py-2">
+<div class="w-16 h-20 border border-outline-variant bg-surface relative overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close-up editorial shot of a cream-colored minimalist silk blouse on a mannequin, soft natural sunlight, boutique fashion aesthetic, IVOIRE collection." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtQye-Cbk-j3snx_PIRlxBn0anF3fHOFsKOj9oTMpNztwENOcWnWMn7A6Hr91UmiMq8-laklHqTgSX-9yup9vkrCObp24HrgcBn5OaNmqnTE6nYAAGuz9MqMHSd6-nS9z3gEGBU9KXIqbctOsvvpq2O9VQ-f9jucHUt9W1guGEl0mDxBQ7A-K0--NSJ-McY1DGGeH5E7fxtIWuLJjX5YUJ-drWlLqFXVEzqkdINQLCZgWXkjQA77Z7YV3XUHwdriSfV8fq1uBXIw"/>
+</div>
+<div class="w-16 h-20 border border-outline-variant bg-surface relative overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Detail shot of high-end leather accessories, artisanal craftsmanship, warm neutral tones, soft studio lighting, luxury fashion product photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWV8Qkj5fA1U617LeUp98TT2nGmWXwQuyZiTXgAFEwaF2B0K4mIoySk-qrVmgGzfRiHMX1lPO44qrgvN_2eyu0B4gP2t-TUvV5T8p8VQHWgRL9StjplhxA4iI80vnShe_V-iTW6c47L55ddtgs0EazVjGJT3Q8R52kYrLQt3cou-7_2C1TzczZBNpBI2lzBbrEL8At2fHhjGR-JHPIs4Zaw6miNhB4loAC0hfpP1dqe6uqlDqh2qx0kzIXYiN5SNcxKQJUyJ6svA"/>
+</div>
+<div class="w-16 h-20 border border-outline-variant bg-surface-container flex items-center justify-center">
+<span class="font-label-sm text-on-surface-variant text-[10px]">+1</span>
+</div>
+</div>
+<div class="flex flex-col md:items-end w-full md:w-auto">
+<span class="font-body-md text-body-md text-on-surface mb-stack-sm">4.250,00 TL</span>
+<button class="px-6 py-2 border border-secondary text-on-secondary-container font-label-sm text-label-sm uppercase hover:bg-secondary hover:text-on-secondary transition-all duration-300">Detayları Gör</button>
+</div>
+</div>
+<!-- Order Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant p-stack-md md:p-stack-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-stack-md group hover:border-primary transition-colors duration-500">
+<div class="flex flex-col gap-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">02 Mart 2024</span>
+<div class="flex items-center gap-2">
+<h3 class="font-title-md text-title-md text-on-surface">#IV-97550</h3>
+<span class="px-2 py-0.5 bg-primary-container/20 text-primary font-label-sm text-[10px] uppercase tracking-wider">Yolda</span>
+</div>
+</div>
+<div class="flex py-2">
+<div class="w-16 h-20 border border-outline-variant bg-surface relative overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="High-fashion architectural accessory, minimalist aesthetic, warm earthy tones, clean lines, high-contrast editorial photography for a boutique brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2nFdDzQhxIjjfNGUaQgwyjf2Ilim_n6yELFbwUH0eKTgxtcULxgaTbmSd_cI6iTu-s5_0S_03KqGx5739KIBYRNO9vhF8PXpkpVMyRAlAuSoQjyES09agFt3oo8lIuGmKEKhnAwAEr4i4TH4qoaQ9m4wZcpfQ_uF75_fwFvmzkj-tT-4ZT3OgrtchN0HdYO4I-2FOdGurPbo0NoNK2xMqNVRFbCXNfsxvcowHVoTM32GD4nOlOCTrIR4lOFR1uCs3S6ZueqkbTg"/>
+</div>
+</div>
+<div class="flex flex-col md:items-end w-full md:w-auto">
+<span class="font-body-md text-body-md text-on-surface mb-stack-sm">1.890,00 TL</span>
+<button class="px-6 py-2 border border-secondary text-on-secondary-container font-label-sm text-label-sm uppercase hover:bg-secondary hover:text-on-secondary transition-all duration-300">Detayları Gör</button>
+</div>
+</div>
+<!-- Order Card 3 -->
+<div class="bg-surface-container-lowest border border-outline-variant p-stack-md md:p-stack-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-stack-md group hover:border-primary transition-colors duration-500 opacity-80">
+<div class="flex flex-col gap-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">15 Şubat 2024</span>
+<div class="flex items-center gap-2">
+<h3 class="font-title-md text-title-md text-on-surface">#IV-92104</h3>
+<span class="px-2 py-0.5 bg-error-container text-on-error-container font-label-sm text-[10px] uppercase tracking-wider">İptal Edildi</span>
+</div>
+</div>
+<div class="flex -space-x-4 overflow-hidden py-2">
+<div class="w-16 h-20 border border-outline-variant bg-surface relative overflow-hidden grayscale">
+<img class="w-full h-full object-cover" data-alt="A minimalist linen garment hung against a clean white wall, architectural shadows, soft morning light, high-end editorial fashion photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5j-bb7YopJSFGQY0MwmMRqXDIKlsZk7g9vaaM_oSmDiATaVX_2yCkgxOU8DyLBFypwtGQdgKCmOvGfsMvrEGim7KvlyoHgAcGiiDEJ0DyJGQdsd802qVASZl8RXFWN67ISi3hGCgGBdzg2k7v9_nXrFT3itcbVXeyW2D_vv42oySN7sVOtRs5cI7FpGTtMApoLOCyAAbT14RLK3F0ydeoRTFd8UsLCqr2WTehBBwHbLGDNnSWgYc9nzR6JizKOhsNG7hbDOkV0Q"/>
+</div>
+</div>
+<div class="flex flex-col md:items-end w-full md:w-auto">
+<span class="font-body-md text-body-md text-on-surface mb-stack-sm">2.100,00 TL</span>
+<button class="px-6 py-2 border border-secondary text-on-secondary-container font-label-sm text-label-sm uppercase hover:bg-secondary hover:text-on-secondary transition-all duration-300">Detayları Gör</button>
+</div>
+</div>
+</div>
+</div>
+<!-- VIEW 2: LOGIN / REGISTER (HIDDEN BY DEFAULT) -->
+<div class="hidden flex justify-center py-10" id="view-login">
+<div class="w-full max-w-md bg-surface-container-lowest border border-outline-variant p-stack-lg md:p-12 space-y-stack-lg relative overflow-hidden">
+<!-- Decorative background elements -->
+<div class="absolute -top-24 -right-24 w-48 h-48 bg-surface-container-high rounded-full opacity-30"></div>
+<div class="text-center space-y-stack-sm relative z-10">
+<h2 class="text-headline-xl font-headline-xl tracking-[0.4em] text-on-surface uppercase">IVOIRE</h2>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Ayrıcalıklı Bir Dünya</p>
+</div>
+<form class="space-y-stack-md relative z-10">
+<div class="space-y-1">
+<label class="font-label-sm text-[10px] uppercase text-secondary tracking-widest block px-1">E-Posta Adresi</label>
+<input class="w-full border-0 border-b border-outline-variant bg-transparent py-3 px-1 focus:ring-0 focus:border-primary font-body-md placeholder:text-surface-variant transition-all" placeholder="example@ivoire.com" type="email"/>
+</div>
+<div class="space-y-1">
+<label class="font-label-sm text-[10px] uppercase text-secondary tracking-widest block px-1">Parola</label>
+<input class="w-full border-0 border-b border-outline-variant bg-transparent py-3 px-1 focus:ring-0 focus:border-primary font-body-md placeholder:text-surface-variant transition-all" placeholder="••••••••" type="password"/>
+</div>
+<div class="flex items-center justify-between pt-2">
+<div class="flex items-center gap-2">
+<input class="w-4 h-4 rounded-none border-outline-variant text-primary focus:ring-primary" id="remember" type="checkbox"/>
+<label class="font-label-sm text-[11px] uppercase text-on-surface-variant" for="remember">Beni Hatırla</label>
+</div>
+<a class="font-label-sm text-[11px] uppercase text-primary hover:underline underline-offset-4" href="#">Parolamı Unuttum</a>
+</div>
+<button class="w-full bg-primary text-on-primary py-4 font-label-sm text-label-sm uppercase tracking-widest transition-all hover:bg-secondary active:scale-[0.98] mt-4" type="submit">
+                        Giriş Yap
+                    </button>
+<div class="relative py-4">
+<div class="absolute inset-0 flex items-center"><div class="w-full border-t border-outline-variant/30"></div></div>
+<div class="relative flex justify-center text-[10px] uppercase">
+<span class="bg-surface-container-lowest px-4 text-on-surface-variant tracking-widest">veya</span>
+</div>
+</div>
+<button class="w-full border border-secondary text-secondary py-4 font-label-sm text-label-sm uppercase tracking-widest hover:bg-surface-container transition-all" type="button">
+                        Hesap Oluştur
+                    </button>
+</form>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-low dark:bg-surface-container-highest border-t border-outline-variant">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-stack-lg py-section-gap px-margin-desktop w-full">
+<div class="space-y-stack-md">
+<h3 class="font-headline-xl text-headline-xl tracking-widest text-on-surface">IVOIRE</h3>
+<p class="font-body-md text-body-md text-secondary max-w-xs">Zamansız zarafetin dijital butiği. Her parça bir hikaye anlatır.</p>
+</div>
+<div class="grid grid-cols-2 gap-stack-md">
+<div class="flex flex-col gap-stack-sm">
+<span class="font-label-sm text-label-sm uppercase text-on-surface font-bold mb-2">Destek</span>
+<a class="font-body-md text-on-surface-variant hover:text-primary transition-opacity duration-200" href="#">Contact</a>
+<a class="font-body-md text-on-surface-variant hover:text-primary transition-opacity duration-200" href="#">Shipping</a>
+<a class="font-body-md text-on-surface-variant hover:text-primary transition-opacity duration-200" href="#">Returns</a>
+</div>
+<div class="flex flex-col gap-stack-sm">
+<span class="font-label-sm text-label-sm uppercase text-on-surface font-bold mb-2">Kurumsal</span>
+<a class="font-body-md text-on-surface-variant hover:text-primary transition-opacity duration-200" href="#">About</a>
+<a class="font-body-md text-on-surface-variant hover:text-primary transition-opacity duration-200" href="#">Newsletter</a>
+<a class="font-body-md text-on-surface-variant hover:text-primary transition-opacity duration-200" href="#">Store Locator</a>
+</div>
+</div>
+<div class="space-y-stack-md">
+<span class="font-label-sm text-label-sm uppercase text-on-surface font-bold">Takip Edin</span>
+<div class="flex gap-stack-md">
+<a class="w-10 h-10 border border-outline-variant flex items-center justify-center hover:border-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">public</span>
+</a>
+<a class="w-10 h-10 border border-outline-variant flex items-center justify-center hover:border-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">camera</span>
+</a>
+<a class="w-10 h-10 border border-outline-variant flex items-center justify-center hover:border-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">share</span>
+</a>
+</div>
+<p class="font-label-sm text-label-sm text-on-secondary-fixed-variant mt-10">© 2024 IVOIRE. All rights reserved.</p>
+</div>
+</div>
+</footer>
+<script>
+        function switchView(view) {
+            const ordersView = document.getElementById('view-orders');
+            const loginView = document.getElementById('view-login');
+            const tabOrders = document.getElementById('tab-orders');
+            const tabLogin = document.getElementById('tab-login');
+
+            if (view === 'orders') {
+                ordersView.classList.remove('hidden');
+                loginView.classList.add('hidden');
+                
+                tabOrders.classList.add('border-primary', 'text-primary');
+                tabOrders.classList.remove('border-transparent', 'text-on-surface-variant');
+                
+                tabLogin.classList.remove('border-primary', 'text-primary');
+                tabLogin.classList.add('border-transparent', 'text-on-surface-variant');
+            } else {
+                ordersView.classList.add('hidden');
+                loginView.classList.remove('hidden');
+                
+                tabLogin.classList.add('border-primary', 'text-primary');
+                tabLogin.classList.remove('border-transparent', 'text-on-surface-variant');
+                
+                tabOrders.classList.remove('border-primary', 'text-primary');
+                tabOrders.classList.add('border-transparent', 'text-on-surface-variant');
+            }
+
+            // Simple animation re-trigger
+            const main = document.querySelector('main');
+            main.classList.remove('page-transition');
+            void main.offsetWidth; // trigger reflow
+            main.classList.add('page-transition');
+        }
+    </script>
+</body></html>

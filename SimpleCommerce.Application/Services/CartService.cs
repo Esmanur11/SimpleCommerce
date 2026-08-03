@@ -1,6 +1,7 @@
 using System.Data;
 using SimpleCommerce.Application.Dtos;
 using SimpleCommerce.Application.Interfaces;
+using SimpleCommerce.Application.Services.IService;
 using SimpleCommerce.Domain.Entities;
 
 namespace SimpleCommerce.Application.Services;
@@ -51,42 +52,13 @@ public class CartService : ICartService
     public async Task<CartViewDto> GetCartAsync(string customerId)
     {
         var cart = await GetOrCreateCartAsync(customerId);
-        var items = await _cartItemRepository.GetByCartIdAsync(cart.Id);
-
-        var itemDtos = new List<CartItemViewDto>();
-        decimal total = 0;
-
-        foreach (var item in items)
-        {
-            var variant = await _productVariantRepository.GetByIdAsync(item.VariantId);
-            if (variant is null) continue;
-
-            var product = await _productRepository.GetByIdAsync(variant.ProductId);
-            if (product is null) continue;
-
-            var price = await _priceRepository.GetActivePriceAsync(product.Id);
-            var unitPrice = price?.Amount ?? 0;
-
-            var lineTotal = unitPrice * item.Quantity;
-            total += lineTotal;
-
-            itemDtos.Add(new CartItemViewDto
-            {
-                CartItemId = item.Id,
-                ProductName = product.Name,
-                Size = variant.Size,
-                Color = variant.Color,
-                Quantity = item.Quantity,
-                UnitPrice = unitPrice,
-                LineTotal = lineTotal
-            });
-        }
+        var items = (await _cartItemRepository.GetDetailedByCartIdAsync(cart.Id)).ToList();
 
         return new CartViewDto
         {
             CartId = cart.Id,
-            Items = itemDtos,
-            TotalPrice = total
+            Items = items,
+            TotalPrice = items.Sum(i => i.LineTotal)
         };
     }
 
@@ -157,25 +129,32 @@ public class CartService : ICartService
 
     public async Task<CheckoutResultDto> CheckoutAsync(string customerId, string addressId, string shippingProviderId)
     {
-        var customer = await _customerRepository.GetByIdAsync(customerId);
+        var customerTask = _customerRepository.GetByIdAsync(customerId);
+        var addressTask = _addressRepository.GetByIdAsync(addressId);
+        var shippingProviderTask = _shippingProviderRepository.GetByIdAsync(shippingProviderId);
+        var cartTask = _cartRepository.GetByCustomerIdAsync(customerId);
+
+        await Task.WhenAll(customerTask, addressTask, shippingProviderTask, cartTask);
+
+        var customer = customerTask.Result;
         if (customer is null)
         {
             throw new KeyNotFoundException($"Müşteri bulunamadı: {customerId}");
         }
 
-        var address = await _addressRepository.GetByIdAsync(addressId);
+        var address = addressTask.Result;
         if (address is null || address.CustomerId != customerId)
         {
             throw new KeyNotFoundException("Adres bulunamadı ya da bu müşteriye ait değil.");
         }
 
-        var shippingProvider = await _shippingProviderRepository.GetByIdAsync(shippingProviderId);
+        var shippingProvider = shippingProviderTask.Result;
         if (shippingProvider is null)
         {
             throw new KeyNotFoundException($"Kargo firması bulunamadı: {shippingProviderId}");
         }
 
-        var cart = await _cartRepository.GetByCustomerIdAsync(customerId);
+        var cart = cartTask.Result;
         if (cart is null)
         {
             throw new InvalidOperationException("Sepet bulunamadı.");
@@ -187,14 +166,25 @@ public class CartService : ICartService
             throw new InvalidOperationException("Sepet boş.");
         }
 
+        var variantIds = cartItems.Select(ci => ci.VariantId).Distinct().ToArray();
+        var variantsById = (await _productVariantRepository.GetByIdsAsync(variantIds))
+            .ToDictionary(v => v.Id);
+
+        var productIds = variantsById.Values.Select(v => v.ProductId).Distinct().ToArray();
+        var productsTask = _productRepository.GetByIdsAsync(productIds);
+        var pricesTask = _priceRepository.GetActivePricesAsync(productIds);
+        await Task.WhenAll(productsTask, pricesTask);
+
+        var productsById = productsTask.Result.ToDictionary(p => p.Id);
+        var pricesByProductId = pricesTask.Result.ToDictionary(p => p.ProductId);
+
         var variantMap = new Dictionary<string, ProductVariant>();
         var productMap = new Dictionary<string, Product>();
         var priceMap = new Dictionary<string, decimal>();
 
         foreach (var item in cartItems)
         {
-            var variant = await _productVariantRepository.GetByIdAsync(item.VariantId);
-            if (variant is null)
+            if (!variantsById.TryGetValue(item.VariantId, out var variant))
             {
                 throw new KeyNotFoundException($"Varyant bulunamadı: {item.VariantId}");
             }
@@ -204,14 +194,12 @@ public class CartService : ICartService
                 throw new InvalidOperationException($"Yetersiz stok: {variant.Size}/{variant.Color}");
             }
 
-            var product = await _productRepository.GetByIdAsync(variant.ProductId);
-            if (product is null)
+            if (!productsById.TryGetValue(variant.ProductId, out var product))
             {
                 throw new KeyNotFoundException($"Ürün bulunamadı: {variant.ProductId}");
             }
 
-            var price = await _priceRepository.GetActivePriceAsync(product.Id);
-            if (price is null)
+            if (!pricesByProductId.TryGetValue(product.Id, out var price))
             {
                 throw new InvalidOperationException($"Ürünün aktif fiyatı bulunamadı: {product.Id}");
             }
@@ -261,24 +249,29 @@ public class CartService : ICartService
             {
                 await _orderRepository.CreateAsync(order, transaction);
 
+                var orderItems = new List<OrderItem>();
+                var stockUpdates = new List<VariantStockUpdate>();
+
                 foreach (var item in cartItems)
                 {
                     var variant = variantMap[item.Id];
                     var product = productMap[item.Id];
                     var unitPrice = priceMap[item.Id];
 
-                    var orderItem = new OrderItem
+                    orderItems.Add(new OrderItem
                     {
                         Id = GenerateId("ITEM"),
                         OrderId = order.Id,
                         VariantId = variant.Id,
                         Quantity = item.Quantity,
                         UnitPrice = unitPrice
-                    };
-                    await _orderItemRepository.CreateAsync(orderItem, transaction);
+                    });
 
-                    var newStock = variant.StockQuantity - item.Quantity;
-                    await _productVariantRepository.UpdateStockAsync(variant.Id, newStock, transaction);
+                    stockUpdates.Add(new VariantStockUpdate
+                    {
+                        VariantId = variant.Id,
+                        NewStockQuantity = variant.StockQuantity - item.Quantity
+                    });
 
                     resultItems.Add(new CartItemViewDto
                     {
@@ -288,9 +281,13 @@ public class CartService : ICartService
                         Color = variant.Color,
                         Quantity = item.Quantity,
                         UnitPrice = unitPrice,
-                        LineTotal = unitPrice * item.Quantity
+                        LineTotal = unitPrice * item.Quantity,
+                        ImageUrl = product.ImageUrl
                     });
                 }
+
+                await _orderItemRepository.CreateManyAsync(orderItems, transaction);
+                await _productVariantRepository.UpdateStocksAsync(stockUpdates, transaction);
 
                 await _paymentRepository.CreateAsync(payment, transaction);
                 await _cartItemRepository.DeleteAllByCartIdAsync(cart.Id, transaction);

@@ -39,6 +39,18 @@ public class ProductVariantRepository : IProductVariantRepository
         return await connection.QuerySingleOrDefaultAsync<ProductVariant>(sql, new { Id = id });
     }
 
+    public async Task<IEnumerable<ProductVariant>> GetByIdsAsync(IEnumerable<string> ids)
+    {
+        const string sql = """
+                           SELECT variant_id AS id, product_id, size, color, stock_quantity
+                           FROM v_product_variants_detail
+                           WHERE variant_id = ANY(@Ids)
+                           """;
+
+        using IDbConnection connection = _connectionFactory.CreateConnection();
+        return await connection.QueryAsync<ProductVariant>(sql, new { Ids = ids.ToArray() });
+    }
+
     public async Task UpdateStockAsync(string variantId, int newStockQuantity, IDbTransaction? transaction = null)
     {
         const string sql = """
@@ -57,6 +69,24 @@ public class ProductVariantRepository : IProductVariantRepository
 
         using IDbConnection connection = _connectionFactory.CreateConnection();
         await connection.ExecuteAsync(sql, parameters);
+    }
+
+    public async Task UpdateStocksAsync(IEnumerable<VariantStockUpdate> updates, IDbTransaction? transaction = null)
+    {
+        const string sql = """
+                           UPDATE product_variants
+                           SET stock_quantity = @NewStockQuantity
+                           WHERE id = @VariantId
+                           """;
+
+        if (transaction is not null)
+        {
+            await transaction.Connection!.ExecuteAsync(sql, updates, transaction);
+            return;
+        }
+
+        using IDbConnection connection = _connectionFactory.CreateConnection();
+        await connection.ExecuteAsync(sql, updates);
     }
 
     public async Task CreateAsync(ProductVariant variant)

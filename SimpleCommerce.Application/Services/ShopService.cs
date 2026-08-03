@@ -1,6 +1,7 @@
 using System.Data;
 using SimpleCommerce.Application.Dtos;
 using SimpleCommerce.Application.Interfaces;
+using SimpleCommerce.Application.Services.IService;
 using SimpleCommerce.Domain.Entities;
 
 namespace SimpleCommerce.Application.Services;
@@ -42,30 +43,9 @@ public class ShopService : IShopService
         _connectionFactory = connectionFactory;
     }
 
-    public async Task<IEnumerable<ProductListItemDto>> GetActiveProductsAsync()
+    public async Task<IEnumerable<ProductListItemDto>> GetActiveProductsAsync(int page, int pageSize)
     {
-        var products = await _productRepository.GetActiveProductsAsync();
-        var result = new List<ProductListItemDto>();
-
-        foreach (var product in products)
-        {
-            var price = await _priceRepository.GetActivePriceAsync(product.Id);
-            var variants = await _productVariantRepository.GetByProductIdAsync(product.Id);
-            var totalStock = variants.Sum(v => v.StockQuantity);
-
-            result.Add(new ProductListItemDto
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Description = product.Description,
-                Price = price?.Amount ?? 0,
-                CategoryId = product.CategoryId,
-                CategoryName = product.CategoryName,
-                StockQuantity = totalStock
-            });
-        }
-
-        return result;
+        return await _productRepository.GetActiveProductsAsync(page, pageSize);
     }
 
     public async Task<ProductDetailDto?> GetProductDetailAsync(string productId)
@@ -90,31 +70,39 @@ public class ShopService : IShopService
                 Size = v.Size,
                 Color = v.Color,
                 StockQuantity = v.StockQuantity
-            }).ToList()
+            }).ToList(),
+            ImageUrl = product.ImageUrl
         };
     }
 
     public async Task<PurchaseResultDto> PurchaseAsync(PurchaseRequestDto request)
     {
-        var customer = await _customerRepository.GetByIdAsync(request.CustomerId);
+        var customerTask = _customerRepository.GetByIdAsync(request.CustomerId);
+        var addressTask = _addressRepository.GetByIdAsync(request.AddressId);
+        var shippingProviderTask = _shippingProviderRepository.GetByIdAsync(request.ShippingProviderId);
+        var variantTask = _productVariantRepository.GetByIdAsync(request.VariantId);
+
+        await Task.WhenAll(customerTask, addressTask, shippingProviderTask, variantTask);
+
+        var customer = customerTask.Result;
         if (customer is null)
         {
             throw new KeyNotFoundException($"Müşteri bulunamadı: {request.CustomerId}");
         }
 
-        var address = await _addressRepository.GetByIdAsync(request.AddressId);
+        var address = addressTask.Result;
         if (address is null || address.CustomerId != request.CustomerId)
         {
             throw new KeyNotFoundException("Adres bulunamadı ya da bu müşteriye ait değil.");
         }
 
-        var shippingProvider = await _shippingProviderRepository.GetByIdAsync(request.ShippingProviderId);
+        var shippingProvider = shippingProviderTask.Result;
         if (shippingProvider is null)
         {
             throw new KeyNotFoundException($"Kargo firması bulunamadı: {request.ShippingProviderId}");
         }
 
-        var variant = await _productVariantRepository.GetByIdAsync(request.VariantId);
+        var variant = variantTask.Result;
         if (variant is null)
         {
             throw new KeyNotFoundException($"Varyant bulunamadı: {request.VariantId}");
@@ -125,13 +113,17 @@ public class ShopService : IShopService
             throw new InvalidOperationException($"Yetersiz stok: {variant.Size}/{variant.Color}");
         }
 
-        var product = await _productRepository.GetByIdAsync(variant.ProductId);
+        var productTask = _productRepository.GetByIdAsync(variant.ProductId);
+        var priceTask = _priceRepository.GetActivePriceAsync(variant.ProductId);
+        await Task.WhenAll(productTask, priceTask);
+
+        var product = productTask.Result;
         if (product is null)
         {
             throw new KeyNotFoundException($"Ürün bulunamadı: {variant.ProductId}");
         }
 
-        var price = await _priceRepository.GetActivePriceAsync(product.Id);
+        var price = priceTask.Result;
         if (price is null)
         {
             throw new InvalidOperationException($"Ürünün aktif fiyatı bulunamadı: {product.Id}");

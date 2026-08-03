@@ -5,6 +5,7 @@ namespace SimpleCommerce.Application.Interfaces;
 public interface IPriceRepository
 {
     Task<Price?> GetActivePriceAsync(string productId);
+    Task<IEnumerable<Price>> GetActivePricesAsync(IEnumerable<string> productIds);
     Task CreateInitialPriceAsync(Price price);
     Task ChangePriceAsync(string productId, decimal newAmount, string? changedBy);
 }

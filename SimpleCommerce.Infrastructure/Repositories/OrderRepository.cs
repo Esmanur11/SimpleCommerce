@@ -55,23 +55,32 @@ public class OrderRepository : IOrderRepository
         return await connection.QuerySingleOrDefaultAsync<Order>(sql, new { Id = id });
     }
 
-    public async Task<IEnumerable<OrderSummary>> GetAllSummariesAsync()
-    {
-        const string sql = "SELECT * FROM v_order_summary ORDER BY created_at DESC";
-
-        using IDbConnection connection = _connectionFactory.CreateConnection();
-        return await connection.QueryAsync<OrderSummary>(sql);
-    }
-
-    public async Task<IEnumerable<OrderSummary>> GetSummariesByCustomerIdAsync(string customerId)
+    public async Task<IEnumerable<OrderSummary>> GetAllSummariesAsync(int page, int pageSize)
     {
         const string sql = """
-                           SELECT * FROM v_order_summary
-                           WHERE customer_id = @CustomerId
-                           ORDER BY created_at DESC
+                           SELECT order_id, customer_id, customer_name, total_price, status, created_at,
+                                  shipping_provider_name, shipping_city, shipping_district
+                           FROM v_order_summary
+                           ORDER BY created_at DESC, order_id DESC
+                           LIMIT @PageSize OFFSET @Offset
                            """;
 
         using IDbConnection connection = _connectionFactory.CreateConnection();
-        return await connection.QueryAsync<OrderSummary>(sql, new { CustomerId = customerId });
+        return await connection.QueryAsync<OrderSummary>(sql, new { PageSize = pageSize, Offset = (page - 1) * pageSize });
+    }
+
+    public async Task<IEnumerable<OrderSummary>> GetSummariesByCustomerIdAsync(string customerId, int page, int pageSize)
+    {
+        const string sql = """
+                           SELECT order_id, customer_id, customer_name, total_price, status, created_at,
+                                  shipping_provider_name, shipping_city, shipping_district
+                           FROM v_order_summary
+                           WHERE customer_id = @CustomerId
+                           ORDER BY created_at DESC, order_id DESC
+                           LIMIT @PageSize OFFSET @Offset
+                           """;
+
+        using IDbConnection connection = _connectionFactory.CreateConnection();
+        return await connection.QueryAsync<OrderSummary>(sql, new { CustomerId = customerId, PageSize = pageSize, Offset = (page - 1) * pageSize });
     }
 }

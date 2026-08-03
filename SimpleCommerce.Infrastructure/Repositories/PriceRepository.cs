@@ -27,6 +27,18 @@ public class PriceRepository : IPriceRepository
         return await connection.QuerySingleOrDefaultAsync<Price>(sql, new { ProductId = productId });
     }
 
+    public async Task<IEnumerable<Price>> GetActivePricesAsync(IEnumerable<string> productIds)
+    {
+        const string sql = """
+                           SELECT id, product_id, amount, valid_from, valid_to, is_active, changed_by
+                           FROM prices
+                           WHERE product_id = ANY(@ProductIds) AND is_active = true
+                           """;
+
+        using IDbConnection connection = _connectionFactory.CreateConnection();
+        return await connection.QueryAsync<Price>(sql, new { ProductIds = productIds.ToArray() });
+    }
+
     public async Task CreateInitialPriceAsync(Price price)
     {
         const string sql = """

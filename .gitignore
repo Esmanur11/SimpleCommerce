@@ -6,5 +6,8 @@ obj/
 .idea/
 *.user
 
+# macOS
+.DS_Store
+
 # Hassas config (şifre içeriyor)
 appsettings.Development.json

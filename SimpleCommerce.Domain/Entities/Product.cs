@@ -10,4 +10,5 @@ public class Product
     public string CategoryId { get; set; } = string.Empty;
     public string CategoryName { get; set; } = string.Empty;
     public string? CreatedBy { get; set; }
+    public string? ImageUrl { get; set; }
 }

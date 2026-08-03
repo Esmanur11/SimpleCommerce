@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  background-color: #f7f1e8;
+  color: #1d1b16;
+  -webkit-font-smoothing: antialiased;
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 300,
+    "GRAD" 0,
+    "opsz" 24;
+}
+
+.material-symbols-outlined.filled-heart {
+  font-variation-settings:
+    "FILL" 1,
+    "wght" 300,
+    "GRAD" 0,
+    "opsz" 24;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d5c3b9;
+}
+
+.filter-checkbox {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border: 1px solid #e4d9c7;
+  position: relative;
+  cursor: pointer;
+  background: transparent;
+}
+
+.filter-checkbox:checked {
+  background-color: #7c5236;
+  border-color: #7c5236;
+}
+
+.filter-checkbox:checked::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 1px 1px 0;
+  transform: rotate(45deg);
+}
+
+.editorial-shadow {
+  box-shadow: 0 4px 20px -10px rgba(124, 82, 54, 0.1);
+}
+
+.checkout-card {
+  background-color: #fffdf9;
+  border: 1px solid #e4d9c7;
+}
+
+.step-active {
+  color: #1d1b16;
+  border-bottom: 2px solid #7c5236;
+}
+
+.step-inactive {
+  color: #83746c;
+}

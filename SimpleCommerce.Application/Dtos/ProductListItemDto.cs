@@ -9,4 +9,5 @@ public class ProductListItemDto
     public string? CategoryId { get; set; }
     public string? CategoryName { get; set; }
     public int StockQuantity { get; set; }
+    public string? ImageUrl { get; set; }
 }

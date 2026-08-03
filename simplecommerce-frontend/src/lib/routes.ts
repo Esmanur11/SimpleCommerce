@@ -1,0 +1,18 @@
+export const routes = {
+  home: "/",
+  products: "/urunler",
+  productDetail: (id: string) => `/urunler/${id}`,
+  cart: "/sepet",
+  checkout: "/odeme",
+  wishlist: "/favorilerim",
+  orders: "/siparislerim",
+  profile: "/profilim",
+  login: "/giris",
+  register: "/kayit",
+  adminLogin: "/admin/giris",
+  adminProducts: "/admin/urunler",
+  adminProductNew: "/admin/urunler/yeni",
+  adminProductDetail: (id: string) => `/admin/urunler/${id}`,
+  adminCategories: "/admin/kategoriler",
+  adminOrders: "/admin/siparisler",
+}

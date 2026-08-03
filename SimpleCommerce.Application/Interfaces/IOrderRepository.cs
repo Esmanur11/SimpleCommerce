@@ -7,6 +7,6 @@ public interface IOrderRepository
 {
     Task CreateAsync(Order order, IDbTransaction? transaction = null);
     Task<Order?> GetByIdAsync(string id);
-    Task<IEnumerable<OrderSummary>> GetAllSummariesAsync();
-    Task<IEnumerable<OrderSummary>> GetSummariesByCustomerIdAsync(string customerId);
+    Task<IEnumerable<OrderSummary>> GetAllSummariesAsync(int page, int pageSize);
+    Task<IEnumerable<OrderSummary>> GetSummariesByCustomerIdAsync(string customerId, int page, int pageSize);
 }

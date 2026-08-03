@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SimpleCommerce.Application.Dtos;
 using SimpleCommerce.Application.Services;
+using SimpleCommerce.Application.Services.IService;
 
 namespace SimpleCommerce.Api.Controllers;
 
@@ -96,7 +97,22 @@ public class CartController : ApiControllerBase
             return Forbid();
         }
 
-        var result = await _cartService.CheckoutAsync(customerId, request.AddressId, request.ShippingProviderId);
-        return Ok(result);
+        try
+        {
+            var result = await _cartService.CheckoutAsync(customerId, request.AddressId, request.ShippingProviderId);
+            return Ok(result);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 }

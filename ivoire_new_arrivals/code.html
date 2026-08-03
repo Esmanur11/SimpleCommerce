@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>IVOIRE | Curated Collection</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400..900;1,400..900&amp;family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error-container": "#93000a",
+                    "on-error": "#ffffff",
+                    "tertiary": "#635b4d",
+                    "inverse-on-surface": "#f6f0e7",
+                    "secondary": "#705a4f",
+                    "on-secondary-container": "#766055",
+                    "surface-variant": "#e7e2d9",
+                    "surface-tint": "#7f5538",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-fixed-variant": "#4d4639",
+                    "surface-bright": "#fff9ef",
+                    "on-secondary": "#ffffff",
+                    "primary-fixed": "#ffdbc7",
+                    "inverse-primary": "#f3bb98",
+                    "on-tertiary-container": "#fffbff",
+                    "on-tertiary-fixed": "#201b10",
+                    "tertiary-fixed": "#ece1cf",
+                    "on-secondary-fixed": "#281810",
+                    "error-container": "#ffdad6",
+                    "surface-container-low": "#f9f3ea",
+                    "on-secondary-fixed-variant": "#574239",
+                    "surface-dim": "#dfd9d1",
+                    "outline": "#83746c",
+                    "primary-container": "#986a4c",
+                    "background": "#fff9ef",
+                    "surface-container-high": "#ede7df",
+                    "on-background": "#1d1b16",
+                    "surface-container-highest": "#e7e2d9",
+                    "outline-variant": "#d5c3b9",
+                    "secondary-fixed": "#fbdccf",
+                    "tertiary-fixed-dim": "#d0c5b4",
+                    "inverse-surface": "#32302a",
+                    "primary-fixed-dim": "#f3bb98",
+                    "secondary-fixed-dim": "#ddc1b3",
+                    "on-surface": "#1d1b16",
+                    "on-primary-container": "#fffbff",
+                    "surface-container": "#f3ede4",
+                    "error": "#ba1a1a",
+                    "on-surface-variant": "#51443d",
+                    "primary": "#7c5236",
+                    "surface": "#fff9ef",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-container": "#7c7465",
+                    "on-primary-fixed-variant": "#643e23",
+                    "on-primary-fixed": "#311401",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-container": "#fbdccf"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-desktop": "64px",
+                    "stack-sm": "8px",
+                    "section-gap": "120px",
+                    "stack-lg": "32px",
+                    "margin-mobile": "20px",
+                    "stack-md": "16px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "title-md": ["Hanken Grotesk"],
+                    "headline-lg": ["Bodoni Moda"],
+                    "label-sm": ["Hanken Grotesk"],
+                    "display-lg": ["Bodoni Moda"],
+                    "body-md": ["Hanken Grotesk"],
+                    "body-lg": ["Hanken Grotesk"],
+                    "headline-lg-mobile": ["Bodoni Moda"],
+                    "headline-xl": ["Bodoni Moda"]
+            },
+            "fontSize": {
+                    "title-md": ["20px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "300"}],
+                    "label-sm": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.15em", "fontWeight": "600"}],
+                    "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "300"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "300"}],
+                    "headline-xl": ["48px", {"lineHeight": "1.2", "fontWeight": "300"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #F7F1E8; /* Matching the requested background color exactly */
+            color: #1d1b16;
+        }
+        .product-card-img {
+            aspect-ratio: 2/3;
+            transition: opacity 0.4s ease;
+        }
+        .filter-checkbox {
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border: 1px solid #E4D9C7;
+            position: relative;
+            cursor: pointer;
+            background: transparent;
+        }
+        .filter-checkbox:checked {
+            background-color: #7c5236;
+            border-color: #7c5236;
+        }
+        .filter-checkbox:checked::after {
+            content: '';
+            position: absolute;
+            left: 4px;
+            top: 1px;
+            width: 4px;
+            height: 8px;
+            border: solid white;
+            border-width: 0 1px 1px 0;
+            transform: rotate(45deg);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #F7F1E8;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #d5c3b9;
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md antialiased overflow-x-hidden">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-surface dark:bg-surface border-b border-outline-variant/30 flex justify-between items-center h-20 px-margin-desktop w-full max-w-full mx-auto transition-all duration-300 ease-in-out">
+<div class="flex items-center space-x-12">
+<a class="text-headline-xl font-headline-xl tracking-[0.3em] text-on-surface dark:text-on-surface uppercase" href="#">IVOIRE</a>
+<nav class="hidden md:flex items-center space-x-8">
+<a class="text-primary font-bold border-b border-primary pb-1 transition-colors duration-300" href="#">Women</a>
+<a class="text-on-surface-variant font-body-md hover:text-primary transition-colors duration-300" href="#">Men</a>
+<a class="text-on-surface-variant font-body-md hover:text-primary transition-colors duration-300" href="#">Accessories</a>
+</nav>
+</div>
+<div class="flex items-center space-x-6">
+<div class="hidden lg:flex items-center border-b border-outline-variant/50 focus-within:border-primary transition-colors py-1">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-label-sm w-32 placeholder:text-on-surface-variant/50" placeholder="Search" type="text"/>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">favorite</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">shopping_bag</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">person</button>
+</div>
+</header>
+<main class="pt-32 pb-section-gap px-margin-desktop">
+<!-- Page Header -->
+<div class="mb-stack-lg flex flex-col md:flex-row md:items-end justify-between border-b border-outline-variant/20 pb-stack-md">
+<div>
+<h1 class="font-headline-xl text-headline-xl text-on-surface mb-2">New Arrivals</h1>
+<p class="font-body-md text-on-surface-variant">Exploring curated silhouettes and editorial staples.</p>
+</div>
+<div class="mt-stack-md md:mt-0 flex items-center space-x-4">
+<span class="font-label-sm text-on-surface-variant uppercase tracking-widest">Sort by:</span>
+<select class="bg-transparent border-none text-label-sm font-label-sm uppercase tracking-widest focus:ring-0 cursor-pointer text-primary">
+<option>Recommended</option>
+<option>Price: Low to High</option>
+<option>Price: High to Low</option>
+<option>Newest</option>
+</select>
+</div>
+</div>
+<div class="flex flex-col lg:flex-row gap-gutter">
+<!-- Sidebar Filter Panel -->
+<aside class="w-full lg:w-64 flex-shrink-0">
+<div class="sticky top-28 space-y-stack-lg">
+<!-- Categories -->
+<div>
+<h3 class="font-label-sm text-label-sm text-on-surface uppercase tracking-widest mb-stack-md">Categories</h3>
+<div class="space-y-2">
+<label class="flex items-center space-x-3 cursor-pointer group">
+<input class="filter-checkbox" type="checkbox"/>
+<span class="font-body-md text-on-surface-variant group-hover:text-on-surface transition-colors">Dresses</span>
+</label>
+<label class="flex items-center space-x-3 cursor-pointer group">
+<input checked="" class="filter-checkbox" type="checkbox"/>
+<span class="font-body-md text-on-surface-variant group-hover:text-on-surface transition-colors">Outerwear</span>
+</label>
+<label class="flex items-center space-x-3 cursor-pointer group">
+<input class="filter-checkbox" type="checkbox"/>
+<span class="font-body-md text-on-surface-variant group-hover:text-on-surface transition-colors">Knitwear</span>
+</label>
+<label class="flex items-center space-x-3 cursor-pointer group">
+<input class="filter-checkbox" type="checkbox"/>
+<span class="font-body-md text-on-surface-variant group-hover:text-on-surface transition-colors">Accessories</span>
+</label>
+</div>
+</div>
+<!-- Size -->
+<div>
+<h3 class="font-label-sm text-label-sm text-on-surface uppercase tracking-widest mb-stack-md">Size</h3>
+<div class="grid grid-cols-4 gap-2">
+<button class="border border-outline-variant py-2 font-label-sm text-label-sm hover:border-primary hover:text-primary transition-all">XS</button>
+<button class="border border-primary bg-primary text-white py-2 font-label-sm text-label-sm transition-all">S</button>
+<button class="border border-outline-variant py-2 font-label-sm text-label-sm hover:border-primary hover:text-primary transition-all">M</button>
+<button class="border border-outline-variant py-2 font-label-sm text-label-sm hover:border-primary hover:text-primary transition-all">L</button>
+<button class="border border-outline-variant py-2 font-label-sm text-label-sm hover:border-primary hover:text-primary transition-all">XL</button>
+</div>
+</div>
+<!-- Color -->
+<div>
+<h3 class="font-label-sm text-label-sm text-on-surface uppercase tracking-widest mb-stack-md">Color</h3>
+<div class="flex flex-wrap gap-3">
+<button class="w-6 h-6 border border-outline-variant p-0.5" title="Ivory"><div class="w-full h-full bg-[#FFFDF9]"></div></button>
+<button class="w-6 h-6 border border-primary p-0.5" title="Sienna"><div class="w-full h-full bg-[#A9795A]"></div></button>
+<button class="w-6 h-6 border border-outline-variant p-0.5" title="Stone"><div class="w-full h-full bg-[#E4D9C7]"></div></button>
+<button class="w-6 h-6 border border-outline-variant p-0.5" title="Ebony"><div class="w-full h-full bg-[#1d1b16]"></div></button>
+<button class="w-6 h-6 border border-outline-variant p-0.5" title="Sage"><div class="w-full h-full bg-[#7C8471]"></div></button>
+</div>
+</div>
+<!-- Price Range -->
+<div>
+<h3 class="font-label-sm text-label-sm text-on-surface uppercase tracking-widest mb-stack-md">Price Range</h3>
+<input class="w-full h-1 bg-outline-variant rounded-full appearance-none cursor-pointer accent-primary" max="1000" min="0" type="range"/>
+<div class="flex justify-between mt-2 font-label-sm text-on-surface-variant">
+<span>$0</span>
+<span>$1,000+</span>
+</div>
+</div>
+<button class="w-full border border-secondary text-secondary py-3 font-label-sm text-label-sm uppercase tracking-widest hover:bg-secondary hover:text-white transition-colors">
+                        Clear All
+                    </button>
+</div>
+</aside>
+<!-- Product Grid -->
+<div class="flex-grow">
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-gutter gap-y-stack-lg">
+<!-- Product Card 1 -->
+<div class="group">
+<div class="relative overflow-hidden mb-stack-sm bg-surface-container-low">
+<img class="product-card-img object-cover w-full group-hover:scale-105 duration-700" data-alt="A portrait studio shot of a model wearing a minimalist ivory silk trench coat. The lighting is soft and architectural, casting gentle shadows that emphasize the high-end editorial aesthetic. The background is a warm neutral beige, consistent with the IVOIRE brand palette. The style is modern-corporate but boutique and intimate." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB676FhO6R-3nm80yVtyDoRd2iUgOngonVUx44-Ar8x0gJVdGDNCzxHsNptyIW98yENeisYrIoJG7NbUq5h7pO28y_VBctz-YUS3TaLoHQCx6TCVu_YW7MNAaZtKlf9HloyWy8Lv3AmHvRnUKnj7Cg4CRp_KJw5MXoTsxBu-17TdzyvFmJtTSdI9r7pZb02FFeR4CXJMFs_KIB4NAwStn_3yYEfIMh0Tw3Eqtta8CvCs5yhADpperb89pQBY7mYMHPPwehm17V-Lw"/>
+<span class="absolute top-4 left-4 bg-secondary text-white px-3 py-1 font-label-sm text-[10px] tracking-widest uppercase">New</span>
+<button class="absolute top-4 right-4 text-on-surface-variant group-hover:text-primary transition-colors material-symbols-outlined">favorite</button>
+</div>
+<div class="space-y-1 px-1">
+<h4 class="font-title-md text-title-md text-on-surface group-hover:text-primary transition-colors truncate">Silk Drape Trench</h4>
+<p class="font-body-md text-on-surface-variant">$420.00</p>
+</div>
+</div>
+<!-- Product Card 2 (Sold Out) -->
+<div class="group opacity-80">
+<div class="relative overflow-hidden mb-stack-sm bg-surface-container-low grayscale-[0.2]">
+<img class="product-card-img object-cover w-full group-hover:scale-105 duration-700" data-alt="A high-fashion portrait of a model wearing a structured wool sweater in a warm sienna brown. The setting is a minimalist architectural space with clean lines and soft, natural morning light. The composition is editorial and clean, focused on the texture of the fabric and the sophisticated silhouette of the garment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAv0ReeJ01d0wH8HCE2IKo5FmY9ciZUIotC4aIPInZHCROwWSyTUM3_YvHwTRN_SjgKGwpgfDfoPKIbnH9ix-NgcJK306Qhek2wvHoRs_Z7y-3b5dtgyA1Pq2SEjaI-C-yhHp7lkQb75OkPcH0t4UAUmr-HoJ6niHE_-K26AowIEk0Om5ZL0cXhFlUeC7LU7RGRrNL_4w-NJm2hKQSC8i1nVVVmW-0K4Dpqr0EuLedR4wFyoVRKco1VfZfJICHTIwAT9Ax6WGWRCg"/>
+<span class="absolute inset-0 bg-surface/40 flex items-center justify-center">
+<span class="bg-on-surface/80 text-white px-6 py-2 font-label-sm text-[11px] tracking-widest uppercase">Sold Out</span>
+</span>
+<button class="absolute top-4 right-4 text-on-surface-variant material-symbols-outlined">favorite</button>
+</div>
+<div class="space-y-1 px-1">
+<h4 class="font-title-md text-title-md text-on-surface-variant truncate">Ribbed Merino Shell</h4>
+<p class="font-body-md text-on-surface-variant">$185.00</p>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="group">
+<div class="relative overflow-hidden mb-stack-sm bg-surface-container-low">
+<img class="product-card-img object-cover w-full group-hover:scale-105 duration-700" data-alt="Model in a fluid, ankle-length linen dress in a stone grey color. Standing in a sun-drenched minimalist interior with a single sculptural vase. The aesthetic is extremely calm and luxurious, emphasizing breathability and organic textures. Natural light fills the frame, creating a high-key editorial look." src="https://lh3.googleusercontent.com/aida-public/AB6AXuABYK1qLPPoiFlSlvZbYG-KCdKozpIKvRl9aLjYMIDuJHSeV1FFe6HvpNI8DjZIb5nmrgVF1LiSqYCXrTURHQIoomEI5mgq0ZF0PXZszVmBzFQI5XdMOG9_FuaaTyxdUkOfVycwmlmGvLpB5A0RCtSKF_dgTiN3qeO7icSPyCXL210fX5GhBiocU4dIKQTsdXeeXzb6SnQUhRGYCo52AjvfBzxALOCuwwJrkouuNJFjihfgrGUx85aQi1LaAa8Qzhb0P08IyZAwcw"/>
+<button class="absolute top-4 right-4 text-on-surface-variant group-hover:text-primary transition-colors material-symbols-outlined">favorite</button>
+</div>
+<div class="space-y-1 px-1">
+<h4 class="font-title-md text-title-md text-on-surface group-hover:text-primary transition-colors truncate">Ethereal Linen Maxi</h4>
+<p class="font-body-md text-on-surface-variant">$295.00</p>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="group">
+<div class="relative overflow-hidden mb-stack-sm bg-surface-container-low">
+<img class="product-card-img object-cover w-full group-hover:scale-105 duration-700" data-alt="A close-up editorial shot of a handcrafted leather handbag in a rich ebony finish. The lighting is focused and dramatic, highlighting the fine grain of the leather and the minimal brass hardware. Set against a textured cream plaster wall, reflecting the brand's sophisticated and boutique nature." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLn9yaZpFaND6Y7-CAxA6C7yl-e2N7v9Qyqpgheyfpj825digQPwcZzn2Va4bTLBGeybHCROPNJiRQggBmuK6U-7wKexMlL2JkaY98h-SLdn1pGgt6x7B4ZloC8IEKaCD4sTLhkPXhHxJcvsKydRCcdWYn5XARY19oxSrpKLEpBHGprVvPpb_Ht-qXRqbVyOdTvNt0mBqDprTBaLwDhuXK86dcq4_EQoBBnMinK0IgbbAwAntQ_ZmwZDdQdeSnK6K6XC6Rc5IyDQ"/>
+<button class="absolute top-4 right-4 text-on-surface-variant group-hover:text-primary transition-colors material-symbols-outlined">favorite</button>
+</div>
+<div class="space-y-1 px-1">
+<h4 class="font-title-md text-title-md text-on-surface group-hover:text-primary transition-colors truncate">Architecture Tote</h4>
+<p class="font-body-md text-on-surface-variant">$650.00</p>
+</div>
+</div>
+<!-- Product Card 5 -->
+<div class="group">
+<div class="relative overflow-hidden mb-stack-sm bg-surface-container-low">
+<img class="product-card-img object-cover w-full group-hover:scale-105 duration-700" data-alt="Editorial portrait of a woman wearing high-waisted tailored trousers in a soft sage green. She is sitting on a minimalist wooden chair in a bright, airy studio. The image focus is on the impeccable tailoring and the sophisticated drape of the fabric. High-end boutique aesthetic with warm, earthy tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAA1iBrKAWNBDSfXrz-2fXlCXxbYl6JDdl4yWjBfCQRVw7zmOeTBLmPW8SkjlxB8mXCjSEESDendZZZ23P3RWPt-bOvAFSMZT0q4lYLZdmA_XwgfXQGLHlFGgv6pKa-ofZfuIQflJugUE1Ola8MqXwMaqAPOJ2POYGxIT5y3dCdKe_xgd_ZBMQ_fb2u0nRUzuj-hvdnSQi2mtueJjb_6m5v1MmVAU7AwU-nnf8z8RlZWkAXm6dCT2n5Ju_DEwRdjIPwHZmV4GmfFg"/>
+<button class="absolute top-4 right-4 text-on-surface-variant group-hover:text-primary transition-colors material-symbols-outlined">favorite</button>
+</div>
+<div class="space-y-1 px-1">
+<h4 class="font-title-md text-title-md text-on-surface group-hover:text-primary transition-colors truncate">Pleated Studio Trouser</h4>
+<p class="font-body-md text-on-surface-variant">$310.00</p>
+</div>
+</div>
+<!-- Product Card 6 -->
+<div class="group">
+<div class="relative overflow-hidden mb-stack-sm bg-surface-container-low">
+<img class="product-card-img object-cover w-full group-hover:scale-105 duration-700" data-alt="Sophisticated editorial shot of an oversized cashmere scarf in a creamy ivory color. The model is draped in the fabric, showcasing its softness and volume. Soft directional lighting creates depth. The atmosphere is cozy yet high-end luxury fashion, set against a warm neutral background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTxoG594zr6Ve0u3dIYqcwDr2kBxN1pWzbU5R3nvE-yXyZR3tFgStQkoT-T6F6okJk_UHRf1Sda2pk3pajys6Ry6cmJKHlEdcILWg089RwpfiO_46QQptU0txRQ5FRh_ZNPgtvw-HykMvVX2NW07pKD42rnJqvxyLgG8RVlbhuheNtxqlutTf4tUhDc0FWS_SLWTLXLrCIsLtOYksK9YHg3JSym0CYQLdadmHUh4iEoffs-pHu8ShGULzeHeO3vNCo06IY-DSTpw"/>
+<button class="absolute top-4 right-4 text-on-surface-variant group-hover:text-primary transition-colors material-symbols-outlined">favorite</button>
+</div>
+<div class="space-y-1 px-1">
+<h4 class="font-title-md text-title-md text-on-surface group-hover:text-primary transition-colors truncate">Heavy Cashmere Wrap</h4>
+<p class="font-body-md text-on-surface-variant">$225.00</p>
+</div>
+</div>
+<!-- Product Card 7 -->
+<div class="group">
+<div class="relative overflow-hidden mb-stack-sm bg-surface-container-low">
+<img class="product-card-img object-cover w-full group-hover:scale-105 duration-700" data-alt="Model wearing a minimalist charcoal gray silk slip dress. The image is captured with a slight motion blur to suggest fluidity and elegance. The environment is an empty art gallery with high ceilings and soft ambient light. Sophisticated, editorial, and effortless boutique style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMVAjJnYecgo7AtfKi4spNkRrH2RiWG-LY3n0RvNoh0msOPl9yLFwhdEpHnS1OT2AOJ6jHEMdd0vmwtEdIxIMQXKk_Olq6FptpBG71XFP-IAmATPIqj6gUNNkbKNHBIFT6QuDwfXVoCfkayEywKiXEUARwkWcmX3PbpF3Iw8MXche3CUICCEtkjhZTuG6dB03itYL1a2XNDTHW5VebLZXJz6OFExvs3emQUc85kSyBLfNScxCjSnC9A59FBFeQp4YSxOwZDvRCVA"/>
+<button class="absolute top-4 right-4 text-on-surface-variant group-hover:text-primary transition-colors material-symbols-outlined">favorite</button>
+</div>
+<div class="space-y-1 px-1">
+<h4 class="font-title-md text-title-md text-on-surface group-hover:text-primary transition-colors truncate">Nocturne Silk Slip</h4>
+<p class="font-body-md text-on-surface-variant">$275.00</p>
+</div>
+</div>
+<!-- Product Card 8 -->
+<div class="group">
+<div class="relative overflow-hidden mb-stack-sm bg-surface-container-low">
+<img class="product-card-img object-cover w-full group-hover:scale-105 duration-700" data-alt="A pair of minimalist pointed-toe leather boots in a deep mahogany brown. The boots are placed on a stone pedestal with sharp geometric lighting. The background is a dark, moody warm neutral. The focus is on the sleek silhouette and the quality of the premium leather. High-end footwear editorial." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAY-L0bc9ynyDNpBrRq2wcJKQ3G4xfZsVD40XsbGvvE7cY07h1W60zh5zE7aEPjcMfoGV_Z_VY2D3zquTuZKkh7GPkpYQ94nv8bySDjSUOYJsERUJ8Yc87dpOD-RC3t8F8YEOWWnEVXjKea6TnGimpVa2Hn_RcRdN9qDTYBoxQEepJNu8lABsgTtgwPcxuIuSmmYzjOx5_xKwWGXlU67HvLL1oofZnLMPErRoUYeJcu5HsmiE6dlFhywpb0kAlznFXvrZESz1786A"/>
+<button class="absolute top-4 right-4 text-on-surface-variant group-hover:text-primary transition-colors material-symbols-outlined">favorite</button>
+</div>
+<div class="space-y-1 px-1">
+<h4 class="font-title-md text-title-md text-on-surface group-hover:text-primary transition-colors truncate">The Sculptural Boot</h4>
+<p class="font-body-md text-on-surface-variant">$540.00</p>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="mt-section-gap border-t border-outline-variant/30 pt-stack-lg flex items-center justify-between">
+<button class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors flex items-center space-x-2">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+<span>Previous</span>
+</button>
+<div class="flex space-x-6">
+<button class="font-label-sm text-label-sm text-primary underline underline-offset-4">01</button>
+<button class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors">02</button>
+<button class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors">03</button>
+<span class="font-label-sm text-label-sm text-on-surface-variant">...</span>
+<button class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors">12</button>
+</div>
+<button class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors flex items-center space-x-2">
+<span>Next</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full bg-surface-container-low dark:bg-surface-container-highest border-t border-outline-variant grid grid-cols-1 md:grid-cols-3 gap-stack-lg py-section-gap px-margin-desktop">
+<div class="space-y-stack-md">
+<h2 class="font-headline-xl text-headline-xl tracking-widest text-on-surface">IVOIRE</h2>
+<p class="font-body-md text-on-surface-variant max-w-xs">A curation of timeless pieces for the modern silhouette. Crafted with intent, designed for longevity.</p>
+</div>
+<div class="grid grid-cols-2 gap-stack-md">
+<div class="flex flex-col space-y-3">
+<h4 class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface">Information</h4>
+<a class="text-on-surface-variant font-body-md hover:text-primary underline-offset-4 hover:underline transition-opacity" href="#">About</a>
+<a class="text-on-surface-variant font-body-md hover:text-primary underline-offset-4 hover:underline transition-opacity" href="#">Shipping</a>
+<a class="text-on-surface-variant font-body-md hover:text-primary underline-offset-4 hover:underline transition-opacity" href="#">Returns</a>
+<a class="text-on-surface-variant font-body-md hover:text-primary underline-offset-4 hover:underline transition-opacity" href="#">Contact</a>
+</div>
+<div class="flex flex-col space-y-3">
+<h4 class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface">Follow</h4>
+<a class="text-on-surface-variant font-body-md hover:text-primary underline-offset-4 hover:underline transition-opacity" href="#">Instagram</a>
+<a class="text-on-surface-variant font-body-md hover:text-primary underline-offset-4 hover:underline transition-opacity" href="#">Pinterest</a>
+<a class="text-on-surface-variant font-body-md hover:text-primary underline-offset-4 hover:underline transition-opacity" href="#">Newsletter</a>
+</div>
+</div>
+<div class="flex flex-col space-y-stack-md">
+<h4 class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface">Stay Inspired</h4>
+<div class="flex border-b border-outline">
+<input class="bg-transparent border-none focus:ring-0 w-full py-2 font-body-md text-on-surface placeholder:text-on-surface-variant/40" placeholder="Email address" type="email"/>
+<button class="material-symbols-outlined text-secondary hover:text-primary transition-colors">arrow_forward</button>
+</div>
+<p class="font-label-sm text-[10px] text-on-surface-variant opacity-60">© 2024 IVOIRE. All rights reserved.</p>
+</div>
+</footer>
+<script>
+        // Micro-interactions and atmospheric logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const navbar = document.querySelector('header');
+            
+            // Simple scroll effect for navbar
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 20) {
+                    navbar.classList.add('bg-surface/95', 'backdrop-blur-md', 'h-16');
+                    navbar.classList.remove('h-20');
+                } else {
+                    navbar.classList.remove('bg-surface/95', 'backdrop-blur-md', 'h-16');
+                    navbar.classList.add('h-20');
+                }
+            });
+
+            // Smooth fade-in for product images
+            const images = document.querySelectorAll('.product-card-img');
+            images.forEach(img => {
+                img.style.opacity = '0';
+                img.addEventListener('load', () => {
+                    img.style.opacity = '1';
+                });
+            });
+
+            // Filter checkbox interactive simulation
+            const filters = document.querySelectorAll('.filter-checkbox');
+            filters.forEach(filter => {
+                filter.addEventListener('change', () => {
+                    // Logic for real filtering would go here
+                    console.log('Filter toggled');
+                });
+            });
+        });
+    </script>
+</body></html>

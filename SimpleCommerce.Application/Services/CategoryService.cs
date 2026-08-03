@@ -1,5 +1,6 @@
 using SimpleCommerce.Application.Dtos;
 using SimpleCommerce.Application.Interfaces;
+using SimpleCommerce.Application.Services.IService;
 
 namespace SimpleCommerce.Application.Services;
 
@@ -15,10 +16,13 @@ public class CategoryService : ICategoryService
     public async Task<IEnumerable<CategoryDto>> GetCategoryTreeAsync()
     {
         var categories = (await _categoryRepository.GetAllAsync()).ToList();
+        var childrenByParentId = categories
+            .Where(c => c.ParentCategoryId != null)
+            .ToLookup(c => c.ParentCategoryId!);
 
         var roots = categories.Where(c => c.ParentCategoryId == null);
 
-        return roots.Select(root => BuildNode(root, categories));
+        return roots.Select(root => BuildNode(root, childrenByParentId));
     }
 
     public async Task<CategoryDto> CreateCategoryAsync(CreateCategoryRequestDto request)
@@ -39,15 +43,16 @@ public class CategoryService : ICategoryService
         };
     }
 
-    private static CategoryDto BuildNode(Domain.Entities.Category category, List<Domain.Entities.Category> all)
+    private static CategoryDto BuildNode(
+        Domain.Entities.Category category,
+        ILookup<string, Domain.Entities.Category> childrenByParentId)
     {
         return new CategoryDto
         {
             Id = category.Id,
             Name = category.Name,
-            Children = all
-                .Where(c => c.ParentCategoryId == category.Id)
-                .Select(child => BuildNode(child, all))
+            Children = childrenByParentId[category.Id]
+                .Select(child => BuildNode(child, childrenByParentId))
                 .ToList()
         };
     }

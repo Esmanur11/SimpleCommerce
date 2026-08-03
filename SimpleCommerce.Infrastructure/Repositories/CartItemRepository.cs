@@ -1,5 +1,6 @@
 using System.Data;
 using Dapper;
+using SimpleCommerce.Application.Dtos;
 using SimpleCommerce.Application.Interfaces;
 using SimpleCommerce.Domain.Entities;
 using SimpleCommerce.Infrastructure.Database;
@@ -37,6 +38,21 @@ public class CartItemRepository : ICartItemRepository
 
         using IDbConnection connection = _connectionFactory.CreateConnection();
         return await connection.QueryAsync<CartItem>(sql, new { CartId = cartId });
+    }
+
+    public async Task<IEnumerable<CartItemViewDto>> GetDetailedByCartIdAsync(string cartId)
+    {
+        const string sql = """
+                           SELECT cart_item_id, product_name, size, color, quantity,
+                                  COALESCE(unit_price, 0) AS unit_price,
+                                  COALESCE(line_total, 0) AS line_total,
+                                  image_url
+                           FROM v_cart_items_detail
+                           WHERE cart_id = @CartId
+                           """;
+
+        using IDbConnection connection = _connectionFactory.CreateConnection();
+        return await connection.QueryAsync<CartItemViewDto>(sql, new { CartId = cartId });
     }
 
     public async Task<CartItem?> GetByCartIdAndVariantIdAsync(string cartId, string variantId)

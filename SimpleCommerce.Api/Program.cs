@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using SimpleCommerce.Application.Interfaces;
 using SimpleCommerce.Application.Services;
+using SimpleCommerce.Application.Services.IService;
 using SimpleCommerce.Infrastructure.Database;
 using SimpleCommerce.Infrastructure.Repositories;
 

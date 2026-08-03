@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SimpleCommerce.Application.Dtos;
 using SimpleCommerce.Application.Services;
+using SimpleCommerce.Application.Services.IService;
 
 namespace SimpleCommerce.Api.Controllers;
 
@@ -42,22 +43,30 @@ public class OrdersController : ApiControllerBase
 
     [Authorize(Roles = "Admin")]
     [HttpGet]
-    public async Task<IActionResult> GetAllOrders()
+    public async Task<IActionResult> GetAllOrders([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
     {
-        var orders = await _orderService.GetAllOrderSummariesAsync();
+        if (page < 1) page = 1;
+        if (pageSize < 1) pageSize = 20;
+        if (pageSize > 100) pageSize = 100;
+
+        var orders = await _orderService.GetAllOrderSummariesAsync(page, pageSize);
         return Ok(orders);
     }
 
     [Authorize(Roles = "Customer")]
     [HttpGet("{customerId}")]
-    public async Task<IActionResult> GetCustomerOrders(string customerId)
+    public async Task<IActionResult> GetCustomerOrders(string customerId, [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
     {
         if (GetAuthenticatedCustomerId() != customerId)
         {
             return Forbid();
         }
 
-        var orders = await _orderService.GetOrderSummariesByCustomerIdAsync(customerId);
+        if (page < 1) page = 1;
+        if (pageSize < 1) pageSize = 20;
+        if (pageSize > 100) pageSize = 100;
+
+        var orders = await _orderService.GetOrderSummariesByCustomerIdAsync(customerId, page, pageSize);
         return Ok(orders);
     }
 }

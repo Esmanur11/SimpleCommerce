@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SimpleCommerce.Application.Dtos;
 using SimpleCommerce.Application.Services;
+using SimpleCommerce.Application.Services.IService;
 
 namespace SimpleCommerce.Api.Controllers;
 
@@ -37,7 +38,14 @@ public class AddressController : ApiControllerBase
             return Forbid();
         }
 
-        var address = await _addressService.AddAddressAsync(request);
-        return Ok(address);
+        try
+        {
+            var address = await _addressService.AddAddressAsync(request);
+            return Ok(address);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 }

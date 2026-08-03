@@ -1,5 +1,6 @@
 using SimpleCommerce.Application.Dtos;
 using SimpleCommerce.Application.Interfaces;
+using SimpleCommerce.Application.Services.IService;
 using SimpleCommerce.Domain.Entities;
 
 namespace SimpleCommerce.Application.Services;
@@ -7,41 +8,15 @@ namespace SimpleCommerce.Application.Services;
 public class FavoriteService : IFavoriteService
 {
     private readonly IFavoriteRepository _favoriteRepository;
-    private readonly IProductRepository _productRepository;
-    private readonly IPriceRepository _priceRepository;
 
-    public FavoriteService(
-        IFavoriteRepository favoriteRepository,
-        IProductRepository productRepository,
-        IPriceRepository priceRepository)
+    public FavoriteService(IFavoriteRepository favoriteRepository)
     {
         _favoriteRepository = favoriteRepository;
-        _productRepository = productRepository;
-        _priceRepository = priceRepository;
     }
 
     public async Task<IEnumerable<FavoriteViewDto>> GetFavoritesAsync(string customerId)
     {
-        var favorites = await _favoriteRepository.GetByCustomerIdAsync(customerId);
-        var result = new List<FavoriteViewDto>();
-
-        foreach (var favorite in favorites)
-        {
-            var product = await _productRepository.GetByIdAsync(favorite.ProductId);
-            if (product == null) continue;
-
-            var price = await _priceRepository.GetActivePriceAsync(product.Id);
-
-            result.Add(new FavoriteViewDto
-            {
-                FavoriteId = favorite.Id,
-                ProductId = product.Id,
-                ProductName = product.Name,
-                Price = price?.Amount ?? 0
-            });
-        }
-
-        return result;
+        return await _favoriteRepository.GetDetailedByCustomerIdAsync(customerId);
     }
 
     public async Task AddFavoriteAsync(AddFavoriteRequestDto request)

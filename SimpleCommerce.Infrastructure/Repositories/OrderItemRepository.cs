@@ -31,4 +31,21 @@ public class OrderItemRepository : IOrderItemRepository
         using IDbConnection connection = _connectionFactory.CreateConnection();
         await connection.ExecuteAsync(sql, orderItem);
     }
+
+    public async Task CreateManyAsync(IEnumerable<OrderItem> orderItems, IDbTransaction? transaction = null)
+    {
+        const string sql = """
+                           INSERT INTO order_items (id, order_id, variant_id, quantity, unit_price)
+                           VALUES (@Id, @OrderId, @VariantId, @Quantity, @UnitPrice)
+                           """;
+
+        if (transaction is not null)
+        {
+            await transaction.Connection!.ExecuteAsync(sql, orderItems, transaction);
+            return;
+        }
+
+        using IDbConnection connection = _connectionFactory.CreateConnection();
+        await connection.ExecuteAsync(sql, orderItems);
+    }
 }

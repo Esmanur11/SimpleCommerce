@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SimpleCommerce.Application.Dtos;
 using SimpleCommerce.Application.Services;
+using SimpleCommerce.Application.Services.IService;
 
 namespace SimpleCommerce.Api.Controllers;
 

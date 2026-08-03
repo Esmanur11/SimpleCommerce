@@ -1,5 +1,6 @@
 using SimpleCommerce.Application.Dtos;
 using SimpleCommerce.Application.Interfaces;
+using SimpleCommerce.Application.Services.IService;
 
 namespace SimpleCommerce.Application.Services;
 

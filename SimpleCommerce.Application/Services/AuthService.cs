@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using SimpleCommerce.Application.Dtos;
 using SimpleCommerce.Application.Interfaces;
+using SimpleCommerce.Application.Services.IService;
 using SimpleCommerce.Domain.Entities;
 
 namespace SimpleCommerce.Application.Services;
@@ -85,7 +86,9 @@ public class AuthService : IAuthService
             Token = GenerateToken(claims),
             CustomerId = customer.Id,
             Email = customer.Email,
-            Role = "Customer"
+            Role = "Customer",
+            FirstName = customer.FirstName,
+            LastName = customer.LastName
         };
     }
 

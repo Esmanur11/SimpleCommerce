@@ -1,5 +1,6 @@
 using System.Data;
 using Dapper;
+using SimpleCommerce.Application.Dtos;
 using SimpleCommerce.Application.Interfaces;
 using SimpleCommerce.Domain.Entities;
 using SimpleCommerce.Infrastructure.Database;
@@ -37,6 +38,18 @@ public class FavoriteRepository : IFavoriteRepository
 
         using IDbConnection connection = _connectionFactory.CreateConnection();
         return await connection.QueryAsync<Favorite>(sql, new { CustomerId = customerId });
+    }
+
+    public async Task<IEnumerable<FavoriteViewDto>> GetDetailedByCustomerIdAsync(string customerId)
+    {
+        const string sql = """
+                           SELECT favorite_id, product_id, product_name, COALESCE(price, 0) AS price
+                           FROM v_favorites_detail
+                           WHERE customer_id = @CustomerId
+                           """;
+
+        using IDbConnection connection = _connectionFactory.CreateConnection();
+        return await connection.QueryAsync<FavoriteViewDto>(sql, new { CustomerId = customerId });
     }
 
     public async Task<Favorite?> GetByCustomerIdAndProductIdAsync(string customerId, string productId)

@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using SimpleCommerce.Application.Dtos;
 using SimpleCommerce.Application.Services;
+using SimpleCommerce.Application.Services.IService;
 
 namespace SimpleCommerce.Api.Controllers;
 
@@ -19,9 +20,13 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetActiveProducts()
+    public async Task<IActionResult> GetActiveProducts([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
     {
-        var products = await _shopService.GetActiveProductsAsync();
+        if (page < 1) page = 1;
+        if (pageSize < 1) pageSize = 20;
+        if (pageSize > 100) pageSize = 100;
+
+        var products = await _shopService.GetActiveProductsAsync(page, pageSize);
         return Ok(products);
     }
 

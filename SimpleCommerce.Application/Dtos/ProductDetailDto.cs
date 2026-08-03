@@ -9,4 +9,5 @@ public class ProductDetailDto
     public string? CategoryId { get; set; }
     public string? CategoryName { get; set; }
     public List<ProductVariantDto> Variants { get; set; } = new();
+    public string? ImageUrl { get; set; }
 }
