@@ -19,3 +19,13 @@ export interface CreateAddressRequest {
   addressLine: string
   zipCode?: string | null
 }
+
+export interface UpdateAddressRequest {
+  title: string
+  fullName: string
+  phone: string
+  city: string
+  district: string
+  addressLine: string
+  zipCode?: string | null
+}

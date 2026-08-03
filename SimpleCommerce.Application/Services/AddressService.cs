@@ -11,6 +11,9 @@ public class AddressService : IAddressService
 {
     private readonly IAddressRepository _addressRepository;
 
+    private static readonly Regex PhoneRegex = new(@"^0?\d{10}$", RegexOptions.Compiled);
+    private static readonly Regex ZipCodeRegex = new(@"^\d{5}$", RegexOptions.Compiled);
+
     public AddressService(IAddressRepository addressRepository)
     {
         _addressRepository = addressRepository;
@@ -19,31 +22,80 @@ public class AddressService : IAddressService
     public async Task<IEnumerable<AddressDto>> GetAddressesAsync(string customerId)
     {
         var addresses = await _addressRepository.GetByCustomerIdAsync(customerId);
-        return addresses.Select(a => new AddressDto
-        {
-            Id = a.Id,
-            Title = a.Title,
-            FullName = a.FullName,
-            Phone = a.Phone,
-            City = a.City,
-            District = a.District,
-            AddressLine = a.AddressLine,
-            ZipCode = a.ZipCode
-        });
+        return addresses.Select(ToDto);
     }
-
-    private static readonly Regex PhoneRegex = new(@"^0?\d{10}$", RegexOptions.Compiled);
-    private static readonly Regex ZipCodeRegex = new(@"^\d{5}$", RegexOptions.Compiled);
 
     public async Task<AddressDto> AddAddressAsync(CreateAddressRequestDto request)
     {
-        var title = request.Title.Trim();
-        var fullName = request.FullName.Trim();
-        var phone = request.Phone.Trim();
-        var city = request.City.Trim();
-        var district = request.District.Trim();
-        var addressLine = request.AddressLine.Trim();
-        var zipCode = request.ZipCode?.Trim();
+        var normalized = ValidateAndNormalize(
+            request.Title, request.FullName, request.Phone, request.City,
+            request.District, request.AddressLine, request.ZipCode);
+
+        var address = new Address
+        {
+            Id = GenerateId("ADDR"),
+            CustomerId = request.CustomerId,
+            Title = normalized.Title,
+            FullName = normalized.FullName,
+            Phone = normalized.Phone,
+            City = normalized.City,
+            District = normalized.District,
+            AddressLine = normalized.AddressLine,
+            ZipCode = normalized.ZipCode,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        await _addressRepository.CreateAsync(address);
+
+        return ToDto(address);
+    }
+
+    public async Task<string?> GetAddressOwnerCustomerIdAsync(string addressId)
+    {
+        var address = await _addressRepository.GetByIdAsync(addressId);
+        return address?.CustomerId;
+    }
+
+    public async Task<AddressDto> UpdateAddressAsync(string addressId, UpdateAddressRequestDto request)
+    {
+        var address = await _addressRepository.GetByIdAsync(addressId);
+        if (address is null)
+        {
+            throw new KeyNotFoundException($"Adres bulunamadı: {addressId}");
+        }
+
+        var normalized = ValidateAndNormalize(
+            request.Title, request.FullName, request.Phone, request.City,
+            request.District, request.AddressLine, request.ZipCode);
+
+        address.Title = normalized.Title;
+        address.FullName = normalized.FullName;
+        address.Phone = normalized.Phone;
+        address.City = normalized.City;
+        address.District = normalized.District;
+        address.AddressLine = normalized.AddressLine;
+        address.ZipCode = normalized.ZipCode;
+
+        await _addressRepository.UpdateAsync(address);
+
+        return ToDto(address);
+    }
+
+    public async Task DeleteAddressAsync(string addressId)
+    {
+        await _addressRepository.DeleteAsync(addressId);
+    }
+
+    private static (string Title, string FullName, string Phone, string City, string District, string AddressLine, string? ZipCode) ValidateAndNormalize(
+        string title, string fullName, string phone, string city, string district, string addressLine, string? zipCode)
+    {
+        title = title.Trim();
+        fullName = fullName.Trim();
+        phone = phone.Trim();
+        city = city.Trim();
+        district = district.Trim();
+        addressLine = addressLine.Trim();
+        zipCode = zipCode?.Trim();
 
         if (string.IsNullOrWhiteSpace(title))
         {
@@ -104,34 +156,20 @@ public class AddressService : IAddressService
             throw new ArgumentException("Posta kodu 5 haneli olmalıdır.");
         }
 
-        var address = new Address
-        {
-            Id = GenerateId("ADDR"),
-            CustomerId = request.CustomerId,
-            Title = title,
-            FullName = fullName,
-            Phone = phone,
-            City = city,
-            District = district,
-            AddressLine = addressLine,
-            ZipCode = string.IsNullOrEmpty(zipCode) ? null : zipCode,
-            CreatedAt = DateTime.UtcNow
-        };
-
-        await _addressRepository.CreateAsync(address);
-
-        return new AddressDto
-        {
-            Id = address.Id,
-            Title = address.Title,
-            FullName = address.FullName,
-            Phone = address.Phone,
-            City = address.City,
-            District = address.District,
-            AddressLine = address.AddressLine,
-            ZipCode = address.ZipCode
-        };
+        return (title, fullName, phone, city, district, addressLine, string.IsNullOrEmpty(zipCode) ? null : zipCode);
     }
+
+    private static AddressDto ToDto(Address address) => new()
+    {
+        Id = address.Id,
+        Title = address.Title,
+        FullName = address.FullName,
+        Phone = address.Phone,
+        City = address.City,
+        District = address.District,
+        AddressLine = address.AddressLine,
+        ZipCode = address.ZipCode
+    };
 
     private static string GenerateId(string prefix)
     {

@@ -50,4 +50,25 @@ public class AddressRepository : IAddressRepository
         using IDbConnection connection = _connectionFactory.CreateConnection();
         await connection.ExecuteAsync(sql, address);
     }
+
+    public async Task UpdateAsync(Address address)
+    {
+        const string sql = """
+                           UPDATE addresses
+                           SET title = @Title, full_name = @FullName, phone = @Phone, city = @City,
+                               district = @District, address_line = @AddressLine, zip_code = @ZipCode
+                           WHERE id = @Id
+                           """;
+
+        using IDbConnection connection = _connectionFactory.CreateConnection();
+        await connection.ExecuteAsync(sql, address);
+    }
+
+    public async Task DeleteAsync(string id)
+    {
+        const string sql = "DELETE FROM addresses WHERE id = @Id";
+
+        using IDbConnection connection = _connectionFactory.CreateConnection();
+        await connection.ExecuteAsync(sql, new { Id = id });
+    }
 }

@@ -48,4 +48,51 @@ public class AddressController : ApiControllerBase
             return BadRequest(new { message = ex.Message });
         }
     }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateAddress(string id, [FromBody] UpdateAddressRequestDto request)
+    {
+        var ownerCustomerId = await _addressService.GetAddressOwnerCustomerIdAsync(id);
+        if (ownerCustomerId is null)
+        {
+            return NotFound();
+        }
+
+        if (ownerCustomerId != GetAuthenticatedCustomerId())
+        {
+            return Forbid();
+        }
+
+        try
+        {
+            var address = await _addressService.UpdateAddressAsync(id, request);
+            return Ok(address);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteAddress(string id)
+    {
+        var ownerCustomerId = await _addressService.GetAddressOwnerCustomerIdAsync(id);
+        if (ownerCustomerId is null)
+        {
+            return NotFound();
+        }
+
+        if (ownerCustomerId != GetAuthenticatedCustomerId())
+        {
+            return Forbid();
+        }
+
+        await _addressService.DeleteAddressAsync(id);
+        return Ok();
+    }
 }

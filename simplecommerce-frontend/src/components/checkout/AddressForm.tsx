@@ -10,10 +10,16 @@ export function AddressForm({
   onSubmit,
   onCancel,
   submitting,
+  defaultValues,
+  submitLabel = "Adresi Kaydet",
+  submittingLabel = "Kaydediliyor...",
 }: {
   onSubmit: (values: AddressFormValues) => void
   onCancel: () => void
   submitting?: boolean
+  defaultValues?: AddressFormValues
+  submitLabel?: string
+  submittingLabel?: string
 }) {
   const {
     register,
@@ -21,7 +27,7 @@ export function AddressForm({
     watch,
     setValue,
     formState: { errors },
-  } = useForm<AddressFormValues>({ resolver: zodResolver(addressSchema) })
+  } = useForm<AddressFormValues>({ resolver: zodResolver(addressSchema), defaultValues })
 
   const selectedCity = watch("city")
   const phoneField = register("phone")
@@ -116,7 +122,7 @@ export function AddressForm({
           Vazgeç
         </button>
         <Button type="submit" disabled={submitting}>
-          {submitting ? "Kaydediliyor..." : "Adresi Kaydet"}
+          {submitting ? submittingLabel : submitLabel}
         </Button>
       </div>
     </form>
