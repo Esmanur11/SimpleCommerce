@@ -455,6 +455,25 @@ export function CheckoutPage() {
               {couponError && (
                 <p className="mt-2 font-label-sm text-[10px] text-error">{couponError}</p>
               )}
+              <div className="mt-3 space-y-1">
+                <p className="font-label-sm text-[9px] uppercase tracking-wide text-on-surface-variant">
+                  Kullanılabilir Kuponlar
+                </p>
+                <ul className="space-y-0.5 font-body-md text-[11px] leading-relaxed text-on-surface-variant">
+                  <li>
+                    2.000 TL ve üzeri alışverişlere: <span className="font-medium">INDIRIM200</span> → 200 TL
+                    indirim
+                  </li>
+                  <li>
+                    3.000 TL ve üzeri alışverişlere: <span className="font-medium">INDIRIM400</span> → 400 TL
+                    indirim
+                  </li>
+                  <li>
+                    5.000 TL ve üzeri alışverişlere: <span className="font-medium">INDIRIM800</span> → 800 TL
+                    indirim
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
           <div className="flex flex-col gap-4 px-2">
